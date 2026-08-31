@@ -44,7 +44,8 @@ function topbar(m) {
   return `<header class="topbar">
 <a class="brand" href="${attr(m.dir)}">
 <span class="dot" aria-hidden="true"></span>
-<span class="brand-name">${esc(site.domain)}</span>
+<span class="brand-name">${esc(site.name)}</span>
+<span class="brand-domain">${esc(site.domain)}</span>
 </a>
 <div class="topbar-actions">
 <a class="lang" href="${attr(alt.dir)}" hreflang="${attr(alt.lang)}" lang="${attr(alt.lang)}" aria-label="${attr(alt.label)}">${esc(alt.short)}</a>
@@ -59,8 +60,11 @@ function topbar(m) {
 function rail(m) {
   const { ui, site, hero, nav } = m;
   return `<nav class="rail" aria-label="${attr(ui.navLabel)}">
-<div class="rail-id">
-<span class="rail-name">n.dalessandro</span>
+<div class="rail-id" aria-hidden="true">
+<span class="rail-name">${site.name
+  .split(' ')
+  .map((w) => `<span>${esc(w)}</span>`)
+  .join('')}</span>
 <span class="rail-meta">${esc(hero.location)}</span>
 </div>
 <ul class="rail-nav">
@@ -75,14 +79,22 @@ ${nav.map((n) => `<li><a href="${attr(n.href)}"><span class="sigil" aria-hidden=
 
 /* ── secciones ───────────────────────────────────────────────────────────── */
 
+/**
+ * El nombre es la respuesta literal de `whoami`: el h1 de la página y la pieza
+ * más grande del documento. El titular baja un escalón y queda como la frase
+ * que sigue a la identidad, sin perder el ámbar de su última línea.
+ */
 function hero(m) {
   const h = m.hero;
   return `<section class="hero">
-<p class="prompt" aria-hidden="true">$ whoami --role</p>
-<h1 class="headline">${h.headline.map((l) => `<span class="hl">${esc(l)}</span>`).join(' ')}</h1>
+<div class="ident">
+<p class="prompt" aria-hidden="true">$ whoami</p>
+<h1 class="name">${esc(m.site.name)}<span class="caret" aria-hidden="true"></span></h1>
+<p class="role">${esc(h.role)}</p>
+</div>
+<p class="headline">${h.headline.map((l) => `<span class="hl">${esc(l)}</span>`).join(' ')}</p>
 <p class="lead">${esc(h.lead)}</p>
 <ul class="hero-meta">
-<li>${esc(h.role)}</li>
 <li>${esc(h.location)}</li>
 <li class="is-live"><span class="dot" aria-hidden="true"></span>${esc(h.availability)}</li>
 </ul>
