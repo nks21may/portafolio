@@ -1,0 +1,46 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html", "x": 0, "y": 0, "w": 920, "h": 1180, "title": "A · Editorial técnica (candidata)" },
+    { "file": "Terminal.dc.html", "x": 1060, "y": 0, "w": 920, "h": 1180, "title": "B · Terminal densa" },
+    { "file": "Sistema.dc.html", "x": 0, "y": 1560, "w": 920, "h": 1180, "title": "C · Sistema" },
+    { "file": "Ficha.dc.html", "x": 1060, "y": 1560, "w": 920, "h": 1180, "title": "D · Ficha técnica" }
+  ],
+  "annotations": [
+    {
+      "id": "nota-intro",
+      "x": 0,
+      "y": -210,
+      "w": 1980,
+      "text": "CUATRO DIRECCIONES, EL MISMO CONTENIDO\nCada boceto muestra nav + hero + las tres capas + el proyecto destacado, para que la comparación sea justa. Ninguna repite el vocabulario de portfolio3 (Archivo + un azul).\n\nDecime la letra y con esa construyo el sitio completo: escritorio y mobile, claro y oscuro, todas las secciones, contenido en archivos de datos.\nCada boceto está en su modo nativo — el par claro/oscuro se dibuja recién para la elegida."
+    },
+    {
+      "id": "nota-a",
+      "x": 0,
+      "y": 1240,
+      "w": 920,
+      "text": "A · EDITORIAL TÉCNICA — mi candidata\nInstrument Serif + IBM Plex Mono sobre papel cálido, un acento bermellón.\n\nPor qué: te lee como alguien que piensa y escribe, no como otro dev con Inter y gradientes. La contención es lo que funciona con lectores de fintech.\nA cambio: la serif puede leerse más «editorial» que «sistemas», y el papel cálido pelea con cualquier captura de terminal que quieras meter después."
+    },
+    {
+      "id": "nota-b",
+      "x": 1060,
+      "y": 1240,
+      "w": 920,
+      "text": "B · TERMINAL DENSA\nJetBrains Mono sobre casi negro, ámbar como único acento. Los párrafos en Public Sans para que se lean.\n\nPor qué: dice «backend e infraestructura» antes de que leas una palabra, y la densidad es el argumento: mucha sustancia por pantalla en 90 segundos.\nA cambio: riesgo de leerse como disfraz. La monoespaciada cansa en prosa larga y un recruiter no técnico puede rebotar."
+    },
+    {
+      "id": "nota-c",
+      "x": 0,
+      "y": 2800,
+      "w": 920,
+      "text": "C · SISTEMA\nChivo + el diagrama del sistema como héroe. El naranja marca un solo nodo: el que te diferencia.\n\nPor qué: es la que responde más literal al criterio de los 5 segundos. Se ve API + MCP + infra como una sola cosa; no hace falta afirmarlo en prosa.\nA cambio: la más cara de construir y de mantener cuando cambien los proyectos, y un diagrama apenas mal dibujado es peor que no tener ninguno."
+    },
+    {
+      "id": "nota-d",
+      "x": 1060,
+      "y": 2800,
+      "w": 920,
+      "text": "D · FICHA TÉCNICA\nSchibsted Grotesk + mono, keyline roja arriba. Sin héroe: la página abre como una especificación.\n\nPor qué: máxima escaneabilidad y cero relleno. Se lee senior y seguro de sí mismo, y es la más rápida de leer en 90 segundos.\nA cambio: puede quedar fría y demasiado parecida a un CV en HTML; deja poco lugar para que se note una persona detrás."
+    }
+  ],
+  "launch": { "view": "canvas" }
+}

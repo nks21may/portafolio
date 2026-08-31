@@ -1,0 +1,209 @@
+/**
+ * Generador estático. Cero dependencias: sólo Node.
+ *
+ *   node build.mjs              las tres variantes
+ *   node build.mjs b-terminal   una sola
+ *
+ * Cada variante aporta tres archivos y nada más:
+ *   sites/<v>/tokens.mjs   paleta clara y oscura + pares de contraste + fuentes
+ *   sites/<v>/styles.css   la hoja, escrita contra var(--token)
+ *   sites/<v>/page.mjs     renderBody(model) -> el interior de <body>
+ *
+ * El contenido sale siempre de content/ a través de lib/model.mjs, así que las
+ * tres muestran exactamente los mismos datos. Si una difiere, es un bug.
+ *
+ * El resultado (dist/<v>/) es HTML, CSS y un puñado de assets: no necesita este
+ * script para funcionar, sólo para regenerarse.
+ */
+
+import { mkdir, writeFile, copyFile, rm, readFile, access } from 'node:fs/promises';
+import { dirname, join } from 'node:path';
+import { fileURLToPath, pathToFileURL } from 'node:url';
+
+import { minifyCss, minifyJs, esc, attr } from './lib/html.mjs';
+import { buildModel } from './lib/model.mjs';
+import { renderHead, buildCsp } from './lib/head.mjs';
+import { renderNginx } from './lib/nginx.mjs';
+import { THEME_SCRIPT } from './lib/theme.mjs';
+import { auditPalette } from './lib/contrast.mjs';
+import { ensureFonts } from './lib/fonts.mjs';
+
+import * as shared from './content/shared.js';
+import es from './content/es.js';
+import en from './content/en.js';
+
+const ROOT = dirname(fileURLToPath(import.meta.url));
+const VARIANTS = ['b-terminal', 'a-editorial', 'd-ficha'];
+const LOCALES = [es, en];
+
+const exists = (p) => access(p).then(() => true, () => false);
+const load = (p) => import(pathToFileURL(join(ROOT, p)).href);
+
+const warnings = [];
+const warn = (m) => { warnings.push(m); };
+
+/* ── tokens -> custom properties ─────────────────────────────────────────
+   Claro en :root pelado. Oscuro por preferencia de sistema, pero blindado
+   con :not([data-theme="light"]) para que una elección explícita gane. Y los
+   dos otra vez bajo [data-theme] para que el botón mande en ambos sentidos. */
+
+function emitTokens(light, dark) {
+  const decl = (o) => Object.entries(o).map(([k, v]) => `--${k}:${v}`).join(';');
+  return (
+    `:root{${decl(light)};color-scheme:light}` +
+    `@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){${decl(dark)};color-scheme:dark}}` +
+    `:root[data-theme="dark"]{${decl(dark)};color-scheme:dark}` +
+    `:root[data-theme="light"]{${decl(light)};color-scheme:light}`
+  );
+}
+
+/* ── archivos sueltos del sitio ──────────────────────────────────────────── */
+
+function sitemap(site) {
+  const today = new Date().toISOString().slice(0, 10);
+  const url = (dir) =>
+    `  <url>\n` +
+    `    <loc>${site.url}${dir}</loc>\n` +
+    `    <xhtml:link rel="alternate" hreflang="es" href="${site.url}/"/>\n` +
+    `    <xhtml:link rel="alternate" hreflang="en" href="${site.url}/en/"/>\n` +
+    `    <xhtml:link rel="alternate" hreflang="x-default" href="${site.url}/"/>\n` +
+    `    <lastmod>${today}</lastmod>\n` +
+    `  </url>`;
+  return (
+    `<?xml version="1.0" encoding="UTF-8"?>\n` +
+    `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n` +
+    `${url('/')}\n${url('/en/')}\n</urlset>\n`
+  );
+}
+
+const robots = (site) => `User-agent: *\nAllow: /\n\nSitemap: ${site.url}/sitemap.xml\n`;
+
+const webmanifest = (site, themeColor) =>
+  JSON.stringify(
+    {
+      name: site.name,
+      short_name: site.initials,
+      start_url: '/',
+      scope: '/',
+      display: 'minimal-ui',
+      background_color: themeColor.light,
+      theme_color: themeColor.light,
+      icons: [{ src: '/assets/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }],
+    },
+    null,
+    2,
+  ) + '\n';
+
+/* ── una variante ────────────────────────────────────────────────────────── */
+
+async function buildVariant(name) {
+  const tokens = await load(`sites/${name}/tokens.mjs`);
+  const { renderBody } = await load(`sites/${name}/page.mjs`);
+  const styles = await readFile(join(ROOT, `sites/${name}/styles.css`), 'utf8');
+
+  /* 1. El contraste primero: si falla, no tiene sentido seguir. */
+  const audit = auditPalette(name, tokens);
+
+  /* 2. Tipografías (cacheadas en assets/fonts: la segunda corrida no baja nada). */
+  const { css: fontCss, files } = await ensureFonts({
+    specs: tokens.fonts,
+    outDir: join(ROOT, 'assets/fonts'),
+  });
+
+  const css = minifyCss(emitTokens(tokens.light, tokens.dark) + fontCss + styles);
+  const js = minifyJs(THEME_SCRIPT);
+
+  const out = join(ROOT, 'dist', name);
+  await rm(out, { recursive: true, force: true });
+  await mkdir(join(out, 'assets/fonts'), { recursive: true });
+
+  /* 3. Una página por idioma.
+     El <meta> de cada página lleva SUS hashes; el header de nginx tiene que
+     llevar la unión, porque el JSON-LD cambia entre español e inglés. */
+  const ldHashes = [];
+  let jsHash = null;
+  let cssHash = null;
+  for (const locale of LOCALES) {
+    const model = buildModel({ locale, shared });
+    const { html: head, hashes } = renderHead({ model, css, js, fonts: files, themeColor: tokens.themeColor });
+    ldHashes.push(hashes.ld);
+    jsHash = hashes.js;
+    cssHash = hashes.css;
+    const doc =
+      `<!doctype html>\n<html lang="${attr(model.htmlLang)}">\n<head>\n${head}\n</head>\n` +
+      `<body>\n${renderBody(model)}\n</body>\n</html>\n`;
+
+    const dir = locale.dir === '/' ? out : join(out, 'en');
+    await mkdir(dir, { recursive: true });
+    await writeFile(join(dir, 'index.html'), doc, 'utf8');
+  }
+
+  /* 4. Assets: sólo los que esta variante usa. */
+  for (const f of files) {
+    await copyFile(join(ROOT, 'assets/fonts', f.file), join(out, 'assets/fonts', f.file));
+  }
+  for (const f of ['favicon.svg', 'apple-touch-icon.png']) {
+    await copyFile(join(ROOT, 'assets/brand', f), join(out, 'assets', f));
+  }
+
+  const cvSrc = join(ROOT, 'assets/brand/cv-nicolas-dalessandro.pdf');
+  if (await exists(cvSrc)) {
+    await copyFile(cvSrc, join(out, 'assets/cv-nicolas-dalessandro.pdf'));
+  } else {
+    warn(`${name}: falta assets/brand/cv-nicolas-dalessandro.pdf — el botón de CV va a dar 404`);
+  }
+
+  for (const locale of LOCALES) {
+    const src = join(ROOT, 'assets/og', `${name}-${locale.lang}.png`);
+    const dest = join(out, 'assets', locale.lang === 'es' ? 'og.png' : 'og-en.png');
+    if (await exists(src)) await copyFile(src, dest);
+    else warn(`${name}: falta la imagen Open Graph ${name}-${locale.lang}.png`);
+  }
+
+  /* La config de nginx va FUERA de dist/: dist/ es la raíz web y no tiene
+     por qué servir su propia configuración de servidor. */
+  await mkdir(join(ROOT, 'deploy'), { recursive: true });
+  await writeFile(
+    join(ROOT, 'deploy', `${name}-nginx.conf`),
+    renderNginx({
+      site: shared.site,
+      csp: buildCsp({ styleHashes: [cssHash], scriptHashes: [jsHash, ...new Set(ldHashes)] }),
+      variant: name,
+    }),
+    'utf8',
+  );
+
+  await writeFile(join(out, 'sitemap.xml'), sitemap(shared.site), 'utf8');
+  await writeFile(join(out, 'robots.txt'), robots(shared.site), 'utf8');
+  await writeFile(join(out, 'site.webmanifest'), webmanifest(shared.site, tokens.themeColor), 'utf8');
+
+  return { name, css: css.length, js: js.length, fonts: files.length, audit };
+}
+
+/* ── main ────────────────────────────────────────────────────────────────── */
+
+const requested = process.argv.slice(2).filter((a) => !a.startsWith('-'));
+const targets = requested.length ? requested : VARIANTS;
+
+for (const t of targets) {
+  if (!VARIANTS.includes(t)) {
+    console.error(`Variante desconocida: "${t}". Conocidas: ${VARIANTS.join(', ')}`);
+    process.exit(1);
+  }
+}
+
+const kb = (n) => `${(n / 1024).toFixed(1)} kB`;
+
+for (const name of targets) {
+  const r = await buildVariant(name);
+  console.log(
+    `${r.name.padEnd(12)} css ${kb(r.css).padStart(8)}  js ${kb(r.js).padStart(7)}  ` +
+      `${r.fonts} woff2  contraste ${r.audit.count} pares, peor ` +
+      `${r.audit.worst.value.toFixed(2)}:1 (${r.audit.worst.label}, ${r.audit.worst.theme})`,
+  );
+}
+
+if (warnings.length) {
+  console.log('');
+  for (const w of warnings) console.log(`  aviso: ${w}`);
+}
