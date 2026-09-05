@@ -48,8 +48,18 @@ export const certification = {
 /** Orden de aparición de los proyectos. El primero es el destacado. */
 export const projects = [
   {
-    id: 'mcp-platform',
+    id: 'cve-proxy',
     featured: true,
+    period: { start: '2026-07', end: '2026-07' },
+    // No lleva `url`: es un servicio para consumo interno, no un sitio que se
+    // pueda visitar. El código sí es público, y `repo` lo enlaza con su propia
+    // etiqueta en vez de reusar la de "Sitio en vivo", que diría algo falso.
+    repo: 'https://github.com/nks21may/cve-proxy',
+    stack: ['Go', 'net/http', 'SQLite', 'modernc.org/sqlite', 'Docker'],
+  },
+  {
+    id: 'mcp-platform',
+    featured: false,
     period: { start: '2023-03', end: null },
     stack: ['Python', 'Django REST Framework', 'drf-spectacular', 'MCP', 'PostgreSQL', 'Angular'],
     // Esquema simplificado de la decisión técnica del proyecto. Es ilustrativo,
@@ -116,12 +126,14 @@ export const skills = [
       'Python',
       'Django',
       'Django REST Framework',
+      'Go',
       'Diseño de APIs',
       'OpenAPI / drf-spectacular',
       'Optimización de ORM y consultas',
       'Celery y tareas asincrónicas',
       'PostgreSQL',
       'MySQL',
+      'SQLite',
     ],
   },
   {
@@ -130,8 +142,7 @@ export const skills = [
       'Model Context Protocol (MCP)',
       'Diseño y despliegue de servidores MCP',
       'Integración de agentes con APIs existentes',
-      'Claude Code en el flujo diario',
-      'ComfyUI',
+      'Claude Code en el flujo diario'
     ],
   },
   {
@@ -164,7 +175,7 @@ export const skills = [
     items: [
       'Git',
       'Bitbucket',
-      'Code review y CODEOWNERS',
+      'Code review y ownership por módulo',
       'Kanban',
       'Documentación técnica y ADRs',
     ],

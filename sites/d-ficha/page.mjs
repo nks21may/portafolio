@@ -166,6 +166,7 @@ ${row(ui.stackLabel, `<span class="stack">${p.stack.map((s) => `<span class="chi
 ${code}
 <ul class="highlights">${p.highlights.map((i) => `<li>${richText(i)}</li>`).join('')}</ul>
 ${p.url ? `<p class="project-link">${ext(p.url, ui.liveSite, ui)}</p>` : ''}
+${p.repo ? `<p class="project-link">${ext(p.repo, ui.sourceCode, ui)}</p>` : ''}
 </article>
 </li>`;
 }
@@ -281,7 +282,7 @@ ${row(c.cvLabel, `<a href="${attr(h.cv)}" download>${esc(h.ctaSecondary)}</a>`)}
 }
 
 const footer = (m) => `<footer class="footer">
-<p class="colophon">${esc(m.footer.colophon)}</p>
+${m.footer.colophon ? `<p class="colophon">${esc(m.footer.colophon)}</p>` : ''}
 <div class="footer-end">
 <p class="rights">© ${new Date().getFullYear()} ${esc(m.site.name)}. ${esc(m.footer.rights)}</p>
 <p class="totop"><a href="#top">${esc(m.ui.backToTop)}</a></p>

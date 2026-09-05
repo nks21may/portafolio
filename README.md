@@ -38,8 +38,8 @@ Todo el texto vive en `content/`. **Nunca hace falta tocar una plantilla para
 cambiar un proyecto.**
 
 - `content/shared.js` — lo que no se traduce: identidad, links, fechas, stacks,
-  ids de proyecto, el fragmento de código del destacado, y las banderas de
-  archivos provisorios.
+  ids de proyecto, el fragmento de código que ilustra un proyecto, y las
+  banderas de archivos provisorios.
 - `content/es.js` y `content/en.js` — el copy de cada idioma. Los ids de
   proyecto, habilidad y cliente tienen que coincidir con `shared.js`; si falta
   uno, el build lo dice con nombre y apellido en vez de renderizar un hueco.

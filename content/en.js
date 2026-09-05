@@ -29,6 +29,7 @@ export default {
     locationLabel: 'Location',
     newTab: 'opens in a new tab',
     liveSite: 'Live site',
+    sourceCode: 'GitHub',
     stackLabel: 'Stack',
     copyEmail: 'Copy address',
     copied: 'Copied',
@@ -60,7 +61,7 @@ export default {
     items: [
       {
         name: 'Backend',
-        text: 'REST APIs in Django, versioned OpenAPI contracts, and queries that never pull into memory what they do not need.',
+        text: 'REST APIs in Django, services in Go, versioned contracts, and queries that never pull into memory what they do not need.',
       },
       {
         name: 'Infrastructure',
@@ -76,7 +77,7 @@ export default {
   sections: {
     trabajo: {
       title: 'Work',
-      intro: 'Four systems. What each one solved, what I decided, and what it runs on.',
+      intro: 'Five systems. What each one solved, what I decided, and what it runs on.',
     },
     experiencia: { title: 'Experience' },
     habilidades: { title: 'Skills' },
@@ -85,20 +86,40 @@ export default {
   },
 
   projects: {
+    'cve-proxy': {
+      title: 'Local mirror of the NVD CVE API',
+      context: 'Personal project',
+      period: 'July 2026',
+      lead: 'A Go service that serves NVD’s CVE API 2.0 out of a local SQLite copy, so that ~100 internal clients stop spending the upstream quota.',
+      problem:
+        'Without an API key, NVD allows 5 requests every 30 seconds. With ~100 clients querying, that quota is gone at once and the API answers 403 — the synchroniser included, which is what would fetch the missing record.',
+      approach:
+        'A mirror with passthrough that works as a query router: the local engine resolves 29 parameters and delegates the five it does not. A client changes the base URL and nothing else, so the replacement is transparent from day one.',
+      highlights: [
+        'One global rate limiter shared by the synchroniser and the passthrough, with priority for live traffic: keeping the mirror fresh never eats the clients’ quota.',
+        'Delegated queries get coalesced: 100 clients asking for the same thing produce one request to NVD, and all 100 get the same body.',
+        'The bootstrap was ingest-bound, not rate-limited: deferring the indexes to the end took it from 87.7 to 6.4 s per page and from nearly 3 hours to ~20 minutes.',
+        'The <code>cve</code> object comes out byte-for-byte identical to the upstream one, and a parity suite checks the identity and order of results against the live API.',
+        'Three parameters that return 0 at NVD today are still delegated: a silent false negative in security data costs more than the request it would save.',
+      ],
+    },
+
     'mcp-platform': {
       title: 'B2B SaaS platform: Django REST API and MCP layer',
       context: 'Work for a B2B SaaS product, through Pabex',
       period: 'March 2023 – present',
       lead: 'The backend of a B2B platform in Django REST Framework, plus the layer that makes it usable by AI agents.',
       problem:
-        'Agent tools written against an API are maintained by hand, and they go stale the moment the API moves. Every new endpoint meant edits in two places, and drift between what the API actually did and what the agent believed existed was only a matter of time.',
+        'A B2B platform in production, with an external API that is the contract its clients build against. And on top of that, the tools an agent exposes against that API are written by hand and go stale the moment the API moves.',
       approach:
-        'I built a self-adapting MCP server: it generates its tools at runtime by reading the API’s live OpenAPI schema through drf-spectacular. When the API changes, the agent’s tools change with it. There are no definitions left to maintain.',
+        'Two and a half years on that backend: the migration of the API to v2, access control, and product features. Plus a self-adapting MCP server that generates its tools from the live OpenAPI schema: when the API changes, the tools change with it. There are no definitions left to maintain.',
       highlights: [
         'A custom authentication middleware using identity and key headers, validated end to end with MCP Inspector.',
         'Custom OpenAPI extensions (<code>x-plan-required</code>), tags and preprocessing hooks, so one codebase emits different documentation per audience and per subscribed plan.',
-        'API design and Swagger documentation segmented by user type.',
-        'ORM work: writes issued as <code>.update()</code> on the queryset, without loading objects into memory.',
+        'I migrated the external API to v2.',
+        'Fixed IDORs in the configuration.',
+        'Clients rotated resources to dodge their plan limit; a freed slot is now locked for a week.',
+        'Integrated an external content-certification service: evidence of a phishing site gets timestamped and signed so it holds up in a legal claim.',
         'I documented the business rules as a structured knowledge base — entities, flows, ADRs and API references — built to be consumed by an agent.',
       ],
     },
@@ -170,9 +191,10 @@ export default {
     },
     teamworkTitle: 'Working on a team',
     teamwork: [
+      'I review PRs for edge cases: fixes that do not fix, that break something else, or that leak sensitive data through debug logs — QA misses that last one, because the feature works.',
       'Fixed an integrity bug between the view and the export: values were truncated in the UI but had to come out complete in CSV and PDF.',
-      'Angular component composition and event propagation across nested components.',
-      'Pushed improvements to the team’s code review process: PR size limits and CODEOWNERS rules.',
+      'Tasks arrive defined by product; when something does not add up I raise it, with a proposal, in the channel devs and product share — before implementing.',
+      'When the team moved from Scrum to Kanban, I went through the flow the tech lead proposed and fed back changes to it.',
     ],
   },
 
@@ -212,8 +234,8 @@ export default {
   },
 
   footer: {
-    colophon:
-      'Hand-written HTML, CSS and JavaScript. No frameworks, no dependencies. Served by nginx from the ARM box in the fourth project.',
+    /* With no `colophon` the footer goes straight to the copyright line: the
+       three templates skip the paragraph when there is no text. */
     rights: 'All rights reserved.',
   },
 };

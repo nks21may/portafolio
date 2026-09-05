@@ -29,6 +29,7 @@ export default {
     locationLabel: 'Ubicación',
     newTab: 'abre en una pestaña nueva',
     liveSite: 'Sitio en vivo',
+    sourceCode: 'GitHub',
     stackLabel: 'Stack',
     copyEmail: 'Copiar dirección',
     copied: 'Copiada',
@@ -65,7 +66,7 @@ export default {
     items: [
       {
         name: 'Backend',
-        text: 'APIs REST en Django, contratos OpenAPI versionados y consultas que no traen a memoria lo que no hace falta.',
+        text: 'APIs REST en Django y servicios en Go, contratos versionados y consultas que no traen a memoria lo que no hace falta.',
       },
       {
         name: 'Infraestructura',
@@ -81,7 +82,7 @@ export default {
   sections: {
     trabajo: {
       title: 'Trabajo',
-      intro: 'Cuatro sistemas. Qué resolvían, qué decidí y con qué está hecho.',
+      intro: 'Cinco sistemas. Qué resolvían, qué decidí y con qué está hecho.',
     },
     experiencia: { title: 'Experiencia' },
     habilidades: { title: 'Habilidades' },
@@ -90,20 +91,40 @@ export default {
   },
 
   projects: {
+    'cve-proxy': {
+      title: 'Mirror local de la CVE API del NVD',
+      context: 'Proyecto propio',
+      period: 'julio 2026',
+      lead: 'Un servicio en Go que sirve la CVE API 2.0 del NVD desde una copia local en SQLite, para que ~100 clientes internos no gasten la cuota del upstream.',
+      problem:
+        'Sin API key, NVD permite 5 requests cada 30 segundos. Con ~100 clientes consultando, la cuota se agota de inmediato y la API devuelve 403 — también al sincronizador, que es el que traería el dato que falta.',
+      approach:
+        'Un mirror con passthrough que funciona como router de consultas: el motor local resuelve 29 parámetros y los cinco que no, se delegan al upstream. El cliente cambia la URL base y nada más, así que el reemplazo es transparente desde el primer día.',
+      highlights: [
+        'Un rate limiter global que comparten sincronizador y passthrough, con prioridad para el tráfico en vivo: el mirror no le come la cuota a los clientes.',
+        'Las consultas delegadas se agrupan: 100 clientes pidiendo lo mismo generan una sola request a NVD y reciben todos el mismo cuerpo.',
+        'El bootstrap estaba limitado por el ingest, no por el rate limit: diferir los índices al final lo bajó de 87,7 a 6,4 s por página y de casi 3 horas a ~20 minutos.',
+        'El objeto <code>cve</code> sale idéntico byte a byte al del upstream, y una suite de paridad compara identidad y orden de los resultados contra la API real.',
+        'Tres parámetros que hoy devuelven 0 en NVD se siguen delegando: un falso negativo silencioso en datos de seguridad cuesta más que la request que ahorraría.',
+      ],
+    },
+
     'mcp-platform': {
       title: 'Plataforma SaaS B2B: API Django REST y capa MCP',
       context: 'Desarrollo para un SaaS B2B, a través de Pabex',
       period: 'marzo 2023 – presente',
       lead: 'El backend de una plataforma B2B en Django REST Framework, más la capa que la vuelve consumible por agentes de IA.',
       problem:
-        'Las herramientas que un agente expone contra una API se escriben a mano y se desactualizan apenas la API cambia. Cada endpoint nuevo era mantenimiento en dos lugares, y la deriva entre lo que la API hacía y lo que el agente creía que existía era cuestión de tiempo.',
+        'Una plataforma B2B en producción, con una API externa que es el contrato con sus clientes. Y encima, las herramientas que un agente expone contra esa API se escriben a mano y se desactualizan apenas la API cambia.',
       approach:
-        'Construí un servidor MCP auto-adaptativo: genera sus herramientas en tiempo de ejecución leyendo el schema OpenAPI vivo de la API vía drf-spectacular. Cuando la API cambia, las herramientas del agente cambian con ella. No hay definiciones que mantener.',
+        'Dos años y medio sobre ese backend: la migración de la API a la v2, control de acceso y features de producto. Y sobre eso, un servidor MCP auto-adaptativo que genera sus herramientas leyendo el schema OpenAPI vivo: cuando la API cambia, las herramientas cambian con ella. No hay definiciones que mantener.',
       highlights: [
         'Middleware de autenticación propio, con headers de identidad y clave, validado end-to-end con MCP Inspector.',
         'Extensiones OpenAPI custom (<code>x-plan-required</code>), tags y preprocessing hooks: el mismo código genera documentación distinta según la audiencia y el plan contratado.',
-        'Diseño de API y documentación Swagger segmentada por tipo de usuario.',
-        'Optimización de ORM: escrituras con <code>.update()</code> sobre el queryset, sin traer los objetos a memoria.',
+        'Migré la API externa a la v2.',
+        'Corregí IDORs en la configuración.',
+        'Los clientes rotaban recursos para esquivar el límite del plan; ahora el cupo liberado queda bloqueado una semana.',
+        'Integré un servicio externo de certificación de contenidos: la evidencia de un phishing queda sellada con fecha y firma para un reclamo legal.',
         'Documenté las reglas de negocio como base de conocimiento estructurada — entidades, flujos, ADRs y referencias de API — pensada para que la consuma un agente.',
       ],
     },
@@ -175,9 +196,10 @@ export default {
     },
     teamworkTitle: 'Trabajo de equipo',
     teamwork: [
+      'Reviso PRs buscando casos borde: arreglos que no arreglan, que rompen otra cosa, o que filtran datos sensibles por logs de debug — eso QA no lo ve, porque la función anda.',
       'Corregí un bug de integridad entre la vista y la exportación: valores que se truncaban en la UI y tenían que salir completos en CSV y PDF.',
-      'Composición de componentes Angular y propagación de eventos entre componentes anidados.',
-      'Empujé mejoras al proceso de code review del equipo: límites de tamaño de PR y reglas por CODEOWNERS.',
+      'Las tareas llegan definidas desde producto; cuando algo no cierra lo planteo en el canal que comparten devs y producto, con una propuesta, antes de implementar.',
+      'Cuando el equipo migró de Scrum a Kanban, analicé el flujo que propuso el tech lead y devolví feedback para ajustarlo.',
     ],
   },
 
@@ -217,8 +239,8 @@ export default {
   },
 
   footer: {
-    colophon:
-      'Hecho a mano en HTML, CSS y JavaScript, sin frameworks ni dependencias. Servido con nginx desde el servidor ARM del cuarto proyecto.',
+    /* Sin `colophon` el pie va directo al copyright: las tres plantillas se
+       saltean el párrafo cuando no hay texto. */
     rights: 'Todos los derechos reservados.',
   },
 };

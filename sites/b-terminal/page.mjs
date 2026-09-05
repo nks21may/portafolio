@@ -147,6 +147,7 @@ ${projectCode(m, p)}
 ${list(p.highlights, 'highlights')}
 <p class="stack"><span class="stack-k" aria-hidden="true">${esc(ui.stackLabel)}</span><span class="sr">${esc(ui.stackLabel)}: </span>${p.stack.map((s) => `<span class="chip">${esc(s)}</span>`).join('')}</p>
 ${p.url ? `<p class="project-link">${ext(p.url, ui.liveSite, ui)}</p>` : ''}
+${p.repo ? `<p class="project-link">${ext(p.repo, ui.sourceCode, ui)}</p>` : ''}
 </article>
 </li>`;
 }
@@ -259,7 +260,7 @@ ${row(
 function footer(m) {
   const year = new Date().getFullYear();
   return `<footer class="footer">
-<p class="colophon">${esc(m.footer.colophon)}</p>
+${m.footer.colophon ? `<p class="colophon">${esc(m.footer.colophon)}</p>` : ''}
 <p class="rights">© ${year} ${esc(m.site.name)}. ${esc(m.footer.rights)}</p>
 <p class="totop"><a href="#top"><span class="sigil" aria-hidden="true">^ </span>${esc(m.ui.backToTop)}</a></p>
 </footer>`;

@@ -123,6 +123,7 @@ ${code}
     .map((s) => `<span class="chip">${esc(s)}</span>`)
     .join('')}</p>
 ${p.url ? `<p class="project-link">${ext(p.url, ui.liveSite, ui)}</p>` : ''}
+${p.repo ? `<p class="project-link">${ext(p.repo, ui.sourceCode, ui)}</p>` : ''}
 </article>
 </li>`;
 }
@@ -229,7 +230,7 @@ ${row(
 }
 
 const footer = (m) => `<footer class="footer">
-<p class="colophon">${esc(m.footer.colophon)}</p>
+${m.footer.colophon ? `<p class="colophon">${esc(m.footer.colophon)}</p>` : ''}
 <div class="footer-end">
 <p class="rights">© ${new Date().getFullYear()} ${esc(m.site.name)}. ${esc(m.footer.rights)}</p>
 <p class="totop"><a href="#top">${esc(m.ui.backToTop)}</a></p>
