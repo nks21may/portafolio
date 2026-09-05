@@ -212,7 +212,8 @@ function contact(m) {
   return band({
     id: m.sections.contacto.id,
     title: c.title,
-    note: c.lead,
+    /* Esta variante no separa el filtro de fit del cierre: los muestra juntos. */
+    note: `${c.seeking}. ${c.lead}`,
     body: `<dl class="channels">
 ${row(c.emailLabel, `<a href="mailto:${attr(h.email)}">${esc(h.email)}</a>`)}
 ${row(c.linkedinLabel, ext(h.linkedin, 'nicolas-dalessandro', m.ui))}

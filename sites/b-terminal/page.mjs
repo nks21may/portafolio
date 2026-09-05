@@ -242,7 +242,7 @@ function contact(m) {
 
   return `<section id="${attr(s.id)}" aria-labelledby="${attr(s.id)}-title">
 <h2 class="cmd" id="${attr(s.id)}-title">${cmd(c.title)}</h2>
-<p class="section-intro">${esc(c.lead)}</p>
+<p class="section-intro">${esc(`${c.seeking}. ${c.lead}`)}</p>
 <dl class="channels">
 ${row(c.emailLabel, `<a href="mailto:${attr(h.email)}">${esc(h.email)}</a>`)}
 ${row(c.linkedinLabel, ext(h.linkedin, 'nicolas-dalessandro', m.ui))}

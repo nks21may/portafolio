@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cp ../portfolio3/data/shared.js content/shared.js)",
+      "Bash(cp ../portfolio3/data/es.js content/es.js)",
+      "Bash(cp ../portfolio3/data/en.js content/en.js)",
+      "Bash(cp ../portfolio3/assets/fonts/jetbrains-mono-latin.woff2 ../portfolio3/assets/fonts/jetbrains-mono-latin-ext.woff2 assets/fonts/)",
+      "Bash(cp ../portfolio3/assets/favicon.svg ../portfolio3/assets/apple-touch-icon.png assets/brand/)"
+    ]
+  }
+}

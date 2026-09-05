@@ -111,15 +111,51 @@ a { color: inherit; }
   text-decoration: none;
 }
 .mast-sub {
-  font-size: 0.625rem;
+  font-size: 0.6875rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--ink-3);
+  color: var(--ink-2);
 }
 
-.mast-nav { display: none; }
+/* En móvil la nav ocupa la segunda fila entera del masthead. Estaba oculta
+   hasta 60rem, o sea que el teléfono —donde más gente escanea— era el único
+   dispositivo sin forma de saltar a una sección ni de llegar al contacto. */
+.mast-nav {
+  /* Fila propia, debajo de la identidad y las acciones: sin las coordenadas
+     explícitas el auto-placement empuja .mast-actions a una tercera fila. */
+  grid-row: 2;
+  grid-column: 1 / -1;
+  /* min-width: 0 es lo que deja que el carril se encoja por debajo de su
+     contenido: sin esto el <ul> a max-content estira el grid del masthead y
+     la página entera arrastra scroll horizontal en el teléfono. */
+  min-width: 0;
+  margin: 0 -1.125rem;
+  padding: 0 1.125rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.mast-nav::-webkit-scrollbar { display: none; }
+.mast-nav ul { display: flex; gap: 1.125rem; width: max-content; }
+.mast-nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.5rem;
+  font-size: 0.8125rem;
+  color: var(--ink-2);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.mast-nav a:hover { color: var(--accent); }
 
-.mast-actions { display: flex; align-items: center; gap: 0.25rem; justify-self: end; }
+.mast-actions {
+  grid-row: 1;
+  grid-column: 2;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  justify-self: end;
+}
 
 .lang, .theme {
   display: inline-flex;
@@ -159,7 +195,7 @@ a { color: inherit; }
   border-bottom: 1px solid var(--rule);
 }
 .row dt {
-  font-size: 0.625rem;
+  font-size: 0.6875rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--ink-3);
@@ -167,6 +203,22 @@ a { color: inherit; }
 }
 .row dd { font-size: 0.9375rem; color: var(--ink-2); min-width: 0; }
 .row.is-key dd { color: var(--ink); }
+
+/* Cuando la etiqueta es un nombre propio (una institución, un cliente) deja de
+   ser un campo y pasa a ser el sujeto de la fila: sale del mono en mayúsculas
+   y se lee como lo que es. Mismo tratamiento en Formación y en Experiencia. */
+.row.is-entity dt, .row.is-client dt {
+  font-family: 'Schibsted Grotesk', ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  text-transform: none;
+  color: var(--ink);
+}
+/* El valor de estas filas abre en el mismo cuerpo que la etiqueta: sin el
+   desplazamiento que necesitan las etiquetas chicas, las dos primeras líneas
+   comparten línea de base. */
+.row.is-entity dt { padding-top: 0; }
 
 /* ── bloque de especificación ───────────────────────────────────────────── */
 
@@ -181,6 +233,15 @@ a { color: inherit; }
   font-weight: 500;
   color: var(--ink);
 }
+.spec .row.is-seeking dd { color: var(--ink); font-weight: 700; }
+/* Sin tope de medida: la fila ya la limita, y a 46ch el renglón se cortaba
+   justo antes del guion y dejaba "— remoto" colgando solo con media columna
+   libre al lado. El guion largo, además, es punto de corte por los dos lados
+   (UAX#14): un espacio duro no alcanza, la cola viaja atada a la palabra que
+   la precede dentro de un span sin cortes. */
+.seeking { text-wrap: pretty; }
+.seeking-tail { white-space: nowrap; }
+
 .spec-link { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
 .place { color: var(--ink); }
 .avail { display: inline-flex; align-items: center; gap: 0.5rem; color: var(--live); font-size: 0.9375rem; font-weight: 400; }
@@ -210,7 +271,9 @@ a { color: inherit; }
   text-wrap: pretty;
 }
 
-.cta { display: flex; flex-wrap: wrap; gap: 0.625rem; padding-top: 0.25rem; }
+/* align-items en flex-start: el bloque del CV lleva su advertencia debajo del
+   botón, y sin esto el botón hermano se estiraba a esa altura. */
+.cta { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 0.625rem; padding-top: 0.25rem; }
 .btn {
   display: inline-flex;
   align-items: center;
@@ -228,7 +291,11 @@ a { color: inherit; }
 .btn-ghost { border-color: var(--ink); color: var(--ink); }
 .btn-ghost:hover { background: var(--paper-3); }
 
-.pending { font-size: 0.625rem; color: var(--ink-3); }
+/* El botón de CV y su advertencia son una unidad: el aviso colgaba de los dos
+   botones y a 10px leía como letra chica, que es el registro contrario al que
+   quiere una divulgación voluntaria. */
+.cta-cv { display: flex; flex-direction: column; gap: 0.4375rem; }
+.pending { font-size: 0.8125rem; color: var(--ink-2); max-width: 30ch; }
 
 /* ── registro ───────────────────────────────────────────────────────────── */
 
@@ -364,7 +431,6 @@ a { color: inherit; }
 .job-role { font-size: 0.9375rem; color: var(--ink-2); }
 
 .row.is-client dd { display: flex; flex-direction: column; gap: 0.125rem; }
-.row.is-client dt { text-transform: none; letter-spacing: -0.015em; font-size: 0.9375rem; font-weight: 700; color: var(--ink); font-family: 'Schibsted Grotesk', ui-sans-serif, system-ui, sans-serif; }
 .client-period { font-size: 0.6875rem; color: var(--ink-3); font-family: 'IBM Plex Mono', ui-monospace, Menlo, Consolas, monospace; }
 .client-text { color: var(--ink-2); }
 
@@ -398,6 +464,25 @@ a { color: inherit; }
 
 .skill-items { display: flex; flex-wrap: wrap; gap: 0.25rem 0.875rem; }
 .skill-items > span { white-space: nowrap; }
+/* Los idiomas no son etiquetas sueltas sino frases: forzarles nowrap sacaba la
+   fila del viewport en pantallas de 320px. */
+.skill-items.is-prose { flex-direction: column; gap: 0.125rem; }
+.skill-items.is-prose > span { white-space: normal; }
+
+/* ── cierre ─────────────────────────────────────────────────────────────── */
+
+.contact-lead {
+  font-size: clamp(1rem, 0.96rem + 0.2vw, 1.0625rem);
+  line-height: 1.6;
+  color: var(--ink);
+  max-width: 52ch;
+  /* balance y no pretty: son dos líneas, y pretty dejaba "te contesto." solo. */
+  text-wrap: balance;
+  padding: 1rem 0 0.25rem;
+}
+.cta-close { padding-top: 1.25rem; padding-bottom: 0.5rem; }
+
+/* ── habilidades y formación (continuación) ─────────────────────────────── */
 
 .row dd .edu-degree { display: block; color: var(--ink); font-weight: 500; }
 .row dd .edu-note { display: block; font-size: 0.8125rem; color: var(--ink-3); }
@@ -442,6 +527,8 @@ a { color: inherit; }
 @media (min-width: 48rem) {
   .main, .masthead, .footer > * { padding-inline: 2rem; }
   .masthead { padding-top: 1.25rem; }
+  /* La nav sigue a ancho completo hasta 60rem: acompaña el padding del masthead. */
+  .mast-nav { margin-inline: -2rem; padding-inline: 2rem; }
 
   .row { grid-template-columns: 11rem minmax(0, 1fr); gap: 1.5rem; padding: 0.875rem 0; }
   .numbered .row.is-numbered { grid-template-columns: 2.5rem 9.5rem minmax(0, 1fr); gap: 1rem; }
@@ -460,18 +547,20 @@ a { color: inherit; }
   .main, .masthead, .footer > * { padding-inline: 3rem; }
 
   .masthead { grid-template-columns: auto minmax(0, 1fr) auto; align-items: flex-end; }
-  .mast-nav { display: block; margin-left: 2rem; padding-bottom: 0.125rem; }
-  .mast-nav ul { display: flex; gap: 1.5rem; }
-  .mast-nav a {
-    display: inline-flex;
-    align-items: center;
-    min-height: 2.75rem;
-    font-size: 0.875rem;
-    color: var(--ink-2);
-    text-decoration: none;
-    transition: color 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  /* Acá la nav vuelve a su celda del masthead y deja de necesitar el scroll.
+     Las coordenadas van explícitas: el grid-row: 2 que le da fila propia en el
+     teléfono sigue en pie si no se reescribe, y la nav se queda caída debajo
+     del nombre, con la tercera columna vacía y las acciones en la del medio. */
+  .mast-nav {
+    grid-row: 1;
+    grid-column: 2;
+    margin: 0 0 0 2rem;
+    padding: 0 0 0.125rem;
+    overflow-x: visible;
   }
-  .mast-nav a:hover { color: var(--accent); }
+  .mast-nav ul { gap: 1.5rem; width: auto; }
+  .mast-nav a { min-height: 2.75rem; font-size: 0.875rem; }
+  .mast-actions { grid-column: 3; }
 
 
   .row { grid-template-columns: 13rem minmax(0, 1fr); gap: 2rem; }

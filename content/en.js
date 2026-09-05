@@ -187,18 +187,24 @@ export default {
 
   education: {
     degree: 'BSc in Computer Science',
-    note: '4 of 5 years completed',
+    note: 'Coursework completed through fourth year',
     certTitle: 'Mercado Pago integration certification — Checkout Pro',
     certDate: 'August 2022',
     certPending: 'Verifiable credential not linked yet',
     certVerify: 'View credential',
     languagesTitle: 'Languages',
-    languages: ['Spanish, native', 'English, basic'],
+    languages: ['Spanish, native', 'English, technical reading and writing; basic spoken'],
   },
 
   contact: {
     title: 'Let’s talk',
-    lead: 'I am looking for senior backend, fullstack or AI engineering roles, remote. If you are evaluating someone for one, write to me and I will reply.',
+    /* Two pieces, not one sentence: `seeking` is the fit filter and travels to
+       the top in variants that treat it as another field of the spec; `lead` is
+       the close and stays at the bottom. Variants that do not split show both
+       together and read as before. */
+    seekingLabel: 'Looking for',
+    seeking: 'Senior backend, fullstack or AI engineering roles — remote',
+    lead: 'If you are evaluating someone for a role like that, write to me and I will reply.',
     emailLabel: 'Email',
     linkedinLabel: 'LinkedIn',
     githubLabel: 'GitHub',

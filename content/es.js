@@ -192,18 +192,24 @@ export default {
 
   education: {
     degree: 'Licenciatura en Ciencias de la Computación',
-    note: '4 de 5 años cursados',
+    note: 'Cursada completa hasta cuarto año',
     certTitle: 'Certificación de integración de Mercado Pago — Checkout Pro',
     certDate: 'agosto 2022',
     certPending: 'Credencial verificable pendiente de cargar',
     certVerify: 'Ver credencial',
     languagesTitle: 'Idiomas',
-    languages: ['Español, nativo', 'Inglés, básico'],
+    languages: ['Español, nativo', 'Inglés, lectura y escritura técnica; oral básico'],
   },
 
   contact: {
     title: 'Hablemos',
-    lead: 'Busco roles backend senior, fullstack o de AI engineering, en remoto. Si estás evaluando a alguien para algo así, escribime y te contesto.',
+    /* Dos piezas, no una frase: `seeking` es el filtro de fit y viaja arriba de
+       todo en las variantes que lo tratan como un campo más de la ficha; `lead`
+       es el cierre y se queda abajo. Las que no separan muestran las dos juntas
+       y leen igual que antes. */
+    seekingLabel: 'Busco',
+    seeking: 'Roles backend senior, fullstack o de AI engineering — remoto',
+    lead: 'Si estás evaluando a alguien para un puesto así, escribime y te contesto.',
     emailLabel: 'Email',
     linkedinLabel: 'LinkedIn',
     githubLabel: 'GitHub',

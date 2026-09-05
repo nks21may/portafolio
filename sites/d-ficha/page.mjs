@@ -24,6 +24,24 @@ const period = (label, isoValue) =>
     ? `<time class="period" datetime="${attr(isoValue)}">${esc(label)}</time>`
     : `<span class="period">${esc(label)}</span>`;
 
+/**
+ * Ata la cola que sigue al guion largo con la palabra que la precede, para que
+ * no quede colgando sola en un renglón. El guion es punto de corte por los dos
+ * lados (UAX#14), así que no alcanza con un espacio duro: el grupo entero va
+ * en un span sin cortes. Sirve igual en los dos idiomas — busca el último
+ * guion largo, no una posición fija.
+ */
+const bindTail = (s) => {
+  const m = /^(.*\S)(\s+—\s+\S.*)$/.exec(String(s));
+  if (!m) return esc(s);
+  const [, head, tail] = m;
+  const cut = head.lastIndexOf(' ');
+  const tie = (t) => `<span class="seeking-tail">${esc(t)}</span>`;
+  return cut === -1
+    ? tie(head + tail)
+    : `${esc(head.slice(0, cut + 1))}${tie(head.slice(cut + 1) + tail)}`;
+};
+
 /** La unidad de esta variante: una fila etiqueta / valor. */
 const row = (label, value, cls = '') =>
   `<div class="row${cls ? ' ' + cls : ''}"><dt>${esc(label)}</dt><dd>${value}</dd></div>`;
@@ -68,11 +86,18 @@ function masthead(m) {
 
 /* ── secciones ───────────────────────────────────────────────────────────── */
 
+/**
+ * El bloque de apertura. La fila "Busco" está primera a propósito: contesta el
+ * fit antes que el canal, que es la pregunta que trae quien abre la página.
+ * Dejarla al final, con el resto del contacto, era pedir la acción antes de
+ * haber dado la razón.
+ */
 function spec(m) {
   const h = m.hero;
   const c = m.contact;
-  return `<section class="spec" aria-label="${attr(h.role)}">
+  return `<section class="spec" aria-label="${attr(m.sections.contacto.title)}">
 <dl>
+${row(c.seekingLabel, `<span class="seeking">${bindTail(c.seeking)}</span>`, 'is-seeking')}
 ${row(c.emailLabel, `<a class="spec-link" href="mailto:${attr(h.email)}">${esc(h.email)}</a>`)}
 ${row(
   m.ui.locationLabel,
@@ -90,9 +115,11 @@ function statement(m) {
 <p class="lead">${esc(h.lead)}</p>
 <div class="cta">
 <a class="btn btn-primary" href="mailto:${attr(h.email)}">${esc(h.ctaPrimary)}</a>
-<a class="btn btn-ghost" href="${attr(h.cv)}" download>${esc(h.ctaSecondary)}</a>
+<div class="cta-cv">
+<a class="btn btn-ghost" href="${attr(h.cv)}" download${h.cvIsPending ? ' aria-describedby="cv-pending"' : ''}>${esc(h.ctaSecondary)}</a>
+${h.cvIsPending ? `<p class="pending" id="cv-pending">${esc(h.cvPending)}</p>` : ''}
 </div>
-${h.cvIsPending ? `<p class="pending">${esc(h.cvPending)}</p>` : ''}
+</div>
 </section>`;
 }
 
@@ -200,6 +227,10 @@ function education(m) {
     ? ext(c.url, c.verifyLabel, m.ui, 'cert-link')
     : `<span class="pending">${esc(c.pendingLabel)}</span>`;
 
+  /* La etiqueta de estas dos filas es un nombre propio, no un campo: va con el
+     mismo tratamiento que los clientes en Experiencia, que son la misma clase
+     de dato. En mayúsculas mono a 10px, "Universidad Nacional de Río Cuarto"
+     quedaba disfrazado de metadato. */
   return record({
     id: m.sections.formacion.id,
     title: m.sections.formacion.title,
@@ -207,36 +238,45 @@ function education(m) {
 ${row(
   e.institution,
   `<span class="edu-degree">${esc(e.degree)}</span><span class="edu-note">${esc(e.note)}</span>`,
+  'is-entity',
 )}
 ${row(
   c.issuer,
   `<span class="edu-degree">${esc(c.title)}</span>` +
     `<span class="edu-note">${period(c.date, c.dateIso)}</span>` +
     `<span class="edu-cred">${credential}</span>`,
-  'is-key',
+  'is-entity',
 )}
-${row(e.languagesTitle, `<span class="skill-items">${e.languages.map((l) => `<span>${esc(l)}</span>`).join('')}</span>`)}
+${row(
+  e.languagesTitle,
+  `<span class="skill-items is-prose">${e.languages.map((l) => `<span>${esc(l)}</span>`).join('')}</span>`,
+)}
 </dl>`,
   });
 }
 
+/**
+ * El cierre. El pitch estaba pasando como `meta` de la cabecera, o sea con el
+ * mismo tratamiento que un rango de fechas: para cuando el lector llegaba acá,
+ * la página ya le había enseñado cuatro veces que ese renglón era ruido. Ahora
+ * es un párrafo, y termina en el botón, que es lo que la sección venía a pedir.
+ */
 function contact(m) {
   const c = m.contact;
   const h = m.hero;
   return record({
     id: m.sections.contacto.id,
     title: c.title,
-    meta: esc(c.lead),
-    body: `<dl class="fields">
+    body: `<p class="contact-lead">${esc(c.lead)}</p>
+<dl class="fields">
 ${row(c.emailLabel, `<a href="mailto:${attr(h.email)}">${esc(h.email)}</a>`)}
 ${row(c.linkedinLabel, ext(h.linkedin, 'nicolas-dalessandro', m.ui))}
 ${row(c.githubLabel, ext(h.github, 'nks21may', m.ui))}
-${row(
-  c.cvLabel,
-  `<a href="${attr(h.cv)}" download>${esc(h.ctaSecondary)}</a>` +
-    (h.cvIsPending ? `<span class="pending"> — ${esc(h.cvPending)}</span>` : ''),
-)}
-</dl>`,
+${row(c.cvLabel, `<a href="${attr(h.cv)}" download>${esc(h.ctaSecondary)}</a>`)}
+</dl>
+<div class="cta cta-close">
+<a class="btn btn-primary" href="mailto:${attr(h.email)}">${esc(h.ctaPrimary)}</a>
+</div>`,
   });
 }
 

@@ -18,9 +18,9 @@ export const light = {
   'ink-2': '#4A4D52',
   'ink-3': '#666A70',
 
-  rule: '#E2E4E7',
+  rule: '#C0C4C9',
   'rule-2': '#EEEFF1',
-  'rule-strong': '#B9BDC2',
+  'rule-strong': '#9EA3A9',
 
   accent: '#C62D19',
   'accent-ink': '#FFFFFF',
@@ -41,9 +41,9 @@ export const dark = {
   'ink-2': '#B0B5BB',
   'ink-3': '#868C93',
 
-  rule: '#23262B',
+  rule: '#383D44',
   'rule-2': '#1C1F23',
-  'rule-strong': '#3B4046',
+  'rule-strong': '#4E545C',
 
   accent: '#FF6A50',
   'accent-ink': '#0E0F11',
@@ -73,6 +73,14 @@ export const checks = [
   { fg: 'live', bg: 'paper', min: 4.5, label: 'estado disponible' },
   { fg: 'focus', bg: 'paper', min: 3, label: 'anillo de foco' },
   { fg: 'focus', bg: 'paper-3', min: 3, label: 'anillo de foco sobre hundido' },
+
+  /* Las reglas no son texto, así que ningún chequeo WCAG las miraba — y son lo
+     único que ata etiqueta con valor cuando la fila se abre en dos columnas.
+     Quedan medidas para que no vuelvan a aplanarse en silencio. Dos pesos
+     separables: la fila y el corte de proyecto. */
+  { fg: 'rule', bg: 'paper', min: 1.7, label: 'regla de fila', text: false },
+  { fg: 'rule', bg: 'paper-3', min: 1.45, label: 'regla de fila sobre hundido', text: false },
+  { fg: 'rule-strong', bg: 'paper', min: 2.4, label: 'regla de corte', text: false },
 ];
 
 export const themeColor = { light: light.paper, dark: dark.paper };
