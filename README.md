@@ -92,12 +92,43 @@ deploy/nginx.conf   la config del servidor, generada
 node build.mjs && node scripts/check.mjs
 rsync -av --delete dist/ servidor:/var/www/nicolasdalessandro.dev/
 sudo cp deploy/nginx.conf /etc/nginx/sites-available/nicolasdalessandro.dev
+sudo ln -s /etc/nginx/sites-available/nicolasdalessandro.dev /etc/nginx/sites-enabled/
 sudo nginx -t && sudo systemctl reload nginx
 ```
 
 El `nginx.conf` se **genera** en cada build porque la CSP lleva los hashes del
 CSS y del JS. Editarlo a mano lo desincroniza en el primer cambio de estilo y
 rompe la página en producción, no en desarrollo.
+
+### Va detrás de Cloudflare Tunnel
+
+El VPS no expone puertos: `cloudflared` entra por `http://127.0.0.1:80` y el
+TLS lo termina Cloudflare en su borde. De ahí tres cosas que el conf generado
+resuelve y que conviene no "arreglar" de vuelta:
+
+- **Nada de 443 ni de certbot.** El origen no ve una conexión TLS nunca, y
+  certbot no podría validar por HTTP-01 con los puertos cerrados.
+- **Ningún redirect de 80 a https de este mismo host.** Ese 301 vuelve al
+  borde, que vuelve a entrar por el túnel al puerto 80: bucle, y el navegador
+  lo corta con `ERR_TOO_MANY_REDIRECTS`. El redirect de `www` al apex sí es
+  seguro, porque cambia de host.
+- **`absolute_redirect off`.** Si no, nginx completa cada `Location` con
+  `$scheme`, que acá vale `http`, y manda de vuelta al borde por un salto de
+  más — sin "Always Use HTTPS", directamente deja al visitante en http.
+
+El `Cache-Control` sale de un `map` y no de un `add_header` por location a
+propósito: nginx **no hereda** `add_header` hacia un nivel que declara el suyo,
+así que un `add_header Cache-Control` dentro de un `location` deja esas
+respuestas sin CSP y sin HSTS. Con el map, las cabeceras se declaran una sola
+vez en el `server` y ningún location las toca.
+
+Para verificar después de recargar, desde el propio servidor:
+
+```bash
+curl -sI -H 'Host: nicolasdalessandro.dev' http://127.0.0.1/ | grep -i -e content-security -e strict-transport -e cache-control
+curl -sI -H 'Host: www.nicolasdalessandro.dev' http://127.0.0.1/   # 301 al apex
+curl -sI -H 'Host: nicolasdalessandro.dev' http://127.0.0.1/en     # 301 a /en/, relativo
+```
 
 ## Pendientes reales
 
