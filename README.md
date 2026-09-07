@@ -54,7 +54,10 @@ site/
   tokens.mjs        paleta clara y oscura + pares de contraste + tipografías
   styles.css        la hoja, escrita contra var(--token)
   page.mjs          renderBody(model) -> el interior de <body>
-scripts/            generadores puntuales (CV provisorio, páginas de OG)
+assets/brand/       favicon, apple-touch-icon y un CV en PDF por idioma
+assets/og/          las dos tarjetas de Open Graph, ya renderizadas
+assets/fonts/       los woff2 self-hosted (los baja el build la primera vez)
+scripts/            generadores puntuales (páginas de OG) y el chequeo del build
 dist/               el sitio publicable (no se versiona: lo hace el build)
 deploy/nginx.conf   la config del servidor, generada
 ```
@@ -199,10 +202,6 @@ curl -sI -H 'Host: nicolasdalessandro.dev' http://127.0.0.1/en     # 301 a /en/,
 
 Ninguno de estos inventa datos: el sitio dice la verdad mientras estén abiertos.
 
-- **CV en PDF.** `assets/brand/cv-nicolas-dalessandro.pdf` es un archivo
-  provisorio que dice, en su primera línea, que no es el CV. Reemplazalo, poné
-  `pending.cv` en `false` (`content/shared.js`) y desaparecen los avisos del
-  sitio. Para regenerar el provisorio: `node scripts/make-cv-placeholder.mjs`.
 - **Credencial de la certificación de Mercado Pago.** Mientras
   `certification.url` sea `null`, se muestra como texto plano y el sitio aclara
   que la credencial verificable está pendiente. Pegá la URL y aparece el link

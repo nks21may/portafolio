@@ -9,7 +9,7 @@
  * que el archivo es auténtico.
  */
 export const pending = {
-  cv: true,
+  cv: false,
 };
 
 /**
@@ -42,11 +42,12 @@ export const site = {
   email: 'contacto@nicolasdalessandro.dev',
   linkedin: 'https://www.linkedin.com/in/nicolas-dalessandro/',
   github: 'https://github.com/nks21may/',
-  // Si algún día tenés un CV traducido, cambiá `en` y listo. Por ahora
-  // los dos idiomas apuntan al mismo PDF para no dejar un link roto.
+  // Un PDF por idioma. El nombre del archivo es el que le queda al visitante
+  // en su carpeta de descargas, y de acá lo saca también el build para saber
+  // qué copiar de assets/brand: si cambiás uno, cambia el otro solo.
   cv: {
-    es: '/assets/cv-nicolas-dalessandro.pdf',
-    en: '/assets/cv-nicolas-dalessandro.pdf',
+    es: '/assets/cv-nicolas-dalessandro-es.pdf',
+    en: '/assets/cv-nicolas-dalessandro-en.pdf',
   },
   // Una tarjeta de Open Graph por idioma: el link se pega en LinkedIn y en mails.
   og: {

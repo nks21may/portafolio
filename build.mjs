@@ -17,7 +17,7 @@
  */
 
 import { mkdir, writeFile, copyFile, rm, readFile, access } from 'node:fs/promises';
-import { dirname, join } from 'node:path';
+import { basename, dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import { minifyCss, minifyJs, attr } from './lib/html.mjs';
@@ -156,11 +156,13 @@ async function buildSite() {
     await copyFile(join(ROOT, 'assets/brand', f), join(out, 'assets', f));
   }
 
-  const cvSrc = join(ROOT, 'assets/brand/cv-nicolas-dalessandro.pdf');
-  if (await exists(cvSrc)) {
-    await copyFile(cvSrc, join(out, 'assets/cv-nicolas-dalessandro.pdf'));
-  } else {
-    warn('falta assets/brand/cv-nicolas-dalessandro.pdf — el botón de CV va a dar 404');
+  /* Un CV por idioma. El nombre sale de content/shared.js, así el link que
+     renderiza la página y el archivo que se copia no pueden separarse. */
+  for (const locale of LOCALES) {
+    const file = basename(shared.site.cv[locale.lang]);
+    const src = join(ROOT, 'assets/brand', file);
+    if (await exists(src)) await copyFile(src, join(out, 'assets', file));
+    else warn(`falta assets/brand/${file} — el botón de CV va a dar 404 en ${locale.lang}`);
   }
 
   for (const locale of LOCALES) {
