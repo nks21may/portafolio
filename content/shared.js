@@ -12,6 +12,27 @@ export const pending = {
   cv: true,
 };
 
+/**
+ * Funciones de Cloudflare que reescriben el HTML en el borde, después de que
+ * salió de nginx. Cada una agrega un script que la CSP tiene que dejar pasar,
+ * o el navegador lo bloquea y la función queda a medias.
+ *
+ * Esto tiene que reflejar lo que está activo en el panel de Cloudflare. Si
+ * apagás una allá y no acá, la CSP queda más abierta de lo necesario; al
+ * revés, la función se rompe en silencio y sólo lo ves en la consola.
+ *
+ * - `emailObfuscation` (Scrape Shield → Email Address Obfuscation) reescribe
+ *   los mailto: a /cdn-cgi/l/email-protection y los decodifica con un script
+ *   servido desde el propio dominio. Con la CSP bloqueándolo, el visitante ve
+ *   "[email protected]" y el enlace no funciona.
+ * - `browserInsights` (Speed → Browser Insights) inyecta el beacon de RUM,
+ *   que además manda las mediciones a cloudflareinsights.com.
+ */
+export const cloudflare = {
+  emailObfuscation: true,
+  browserInsights: true,
+};
+
 export const site = {
   domain: 'nicolasdalessandro.dev',
   url: 'https://nicolasdalessandro.dev',

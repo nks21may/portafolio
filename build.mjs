@@ -22,7 +22,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import { minifyCss, minifyJs, attr } from './lib/html.mjs';
 import { buildModel } from './lib/model.mjs';
-import { renderHead, buildCsp } from './lib/head.mjs';
+import { renderHead, buildCsp, cloudflareSources } from './lib/head.mjs';
 import { renderNginx } from './lib/nginx.mjs';
 import { THEME_SCRIPT } from './lib/theme.mjs';
 import { auditPalette } from './lib/contrast.mjs';
@@ -119,12 +119,23 @@ async function buildSite() {
   /* 3. Una página por idioma.
      El <meta> de cada página lleva SUS hashes; el header de nginx tiene que
      llevar la unión, porque el JSON-LD cambia entre español e inglés. */
+  /* Los orígenes que Cloudflare necesita para sus reescrituras del borde. Van
+     igual en el <meta> de cada página y en el header de nginx. */
+  const cspSources = cloudflareSources({ site: shared.site, cloudflare: shared.cloudflare });
+
   const ldHashes = [];
   let jsHash = null;
   let cssHash = null;
   for (const locale of LOCALES) {
     const model = buildModel({ locale, shared });
-    const { html: head, hashes } = renderHead({ model, css, js, fonts: files, themeColor: tokens.themeColor });
+    const { html: head, hashes } = renderHead({
+      model,
+      css,
+      js,
+      fonts: files,
+      themeColor: tokens.themeColor,
+      cspSources,
+    });
     ldHashes.push(hashes.ld);
     jsHash = hashes.js;
     cssHash = hashes.css;
@@ -166,7 +177,12 @@ async function buildSite() {
     join(ROOT, 'deploy', 'nginx.conf'),
     renderNginx({
       site: shared.site,
-      csp: buildCsp({ styleHashes: [cssHash], scriptHashes: [jsHash, ...new Set(ldHashes)] }),
+      csp: buildCsp({
+        styleHashes: [cssHash],
+        scriptHashes: [jsHash, ...new Set(ldHashes)],
+        scriptSources: cspSources.script,
+        connectSources: cspSources.connect,
+      }),
     }),
     'utf8',
   );

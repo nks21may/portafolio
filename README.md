@@ -70,9 +70,10 @@ deploy/nginx.conf   la config del servidor, generada
   política entera.
 - **Ningún hex suelto en el `.css`.** Los colores salen de `tokens.mjs`, que es
   lo que el chequeo de contraste puede medir.
-- **Cero requests externos.** Las tipografías se sirven desde el propio dominio;
-  no hay CDN, ni Google Fonts en runtime, ni analítica. Por eso la CSP puede ser
-  `default-src 'none'` de verdad.
+- **El sitio no pide nada a terceros.** Las tipografías se sirven desde el
+  propio dominio; no hay CDN, ni Google Fonts en runtime, ni analítica propia.
+  Lo único externo lo agrega Cloudflare en el borde, y está declarado en
+  `content/shared.js` bajo `cloudflare` — ver más abajo.
 - **El CSS y el JS van inline.** Son páginas únicas: un archivo aparte sería un
   round-trip extra sin beneficio de caché real.
 - **Español en `/`, inglés en `/en/`, prerenderizados.** El conmutador es un
@@ -146,6 +147,39 @@ resuelve y que conviene no "arreglar" de vuelta:
   cloudflared. Ojo si algún día agregás otro vhost: mezclar `listen 80` con
   `listen 127.0.0.1:80` hace que nginx intente bindear `0.0.0.0:80` y
   `127.0.0.1:80` a la vez y no arranque. Todos en loopback, o ninguno.
+
+### Cloudflare reescribe el HTML, y la CSP tiene que saberlo
+
+Dos funciones del panel modifican la página **después** de que salió de nginx,
+y cada una agrega un script que la CSP bloquearía. Están declaradas en
+`content/shared.js`, en `cloudflare`, y de ahí salen los orígenes que se suman
+a la política:
+
+| función | qué agrega | qué se abre |
+|---|---|---|
+| Email Address Obfuscation | `/cdn-cgi/scripts/…/email-decode.min.js` | `script-src https://<dominio>/cdn-cgi/scripts/` |
+| Browser Insights | `static.cloudflareinsights.com/beacon.min.js` | `script-src` ese host + `connect-src https://cloudflareinsights.com` |
+
+**Ese objeto tiene que reflejar lo que está activo en el panel.** Si apagás una
+allá y no acá, la CSP queda más abierta de lo necesario; al revés, la función
+se rompe en silencio y sólo se ve en la consola del navegador.
+
+El primer origen va con path y no con `'self'` a propósito: `'self'` habilitaría
+cualquier script del dominio, y el prefijo habilita sólo lo que cuelga de
+`/cdn-cgi/scripts/`. Verificado en Chrome: un script bajo ese path se ejecuta y
+uno del mismo origen fuera de él queda bloqueado.
+
+Con la ofuscación de email activa hay algo que conviene mirar de vez en cuando:
+Cloudflare reescribe los `mailto:`, y el email también aparece dentro del
+JSON-LD, que va hasheado en la CSP. Hoy Cloudflare no toca el contenido de los
+`<script>`, así que el hash sigue valiendo. Si algún día lo hiciera, el JSON-LD
+quedaría bloqueado y se vería en la consola como un `Refused to execute inline
+script`. Se comprueba desde fuera del servidor, que es donde interviene el
+borde:
+
+```bash
+curl -s https://nicolasdalessandro.dev/ | grep -c email-protection   # >0: está activa
+```
 
 El `Cache-Control` sale de un `map` y no de un `add_header` por location a
 propósito: nginx **no hereda** `add_header` hacia un nivel que declara el suyo,
