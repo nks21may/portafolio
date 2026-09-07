@@ -86,7 +86,24 @@ deploy/nginx.conf   la config del servidor, generada
 
 ## Desplegar
 
-`dist/` es autocontenida: se sube esa carpeta y nada más.
+```bash
+sh deploy.sh
+```
+
+Construye, corre el verificador, sube `dist/` y recarga nginx. Si el build o el
+check fallan, no sale nada del disco local.
+
+En el servidor el contenido se desempaqueta al lado y recién ahí se cambia de
+lugar: el `mv` de un directorio dentro del mismo filesystem es atómico, así que
+nadie ve el sitio a medio copiar y el anterior queda entero en
+`/var/www/<dominio>.anterior`. El vhost se guarda con fecha antes de pisarlo, y
+si `nginx -t` rechaza la configuración nueva se restaura el anterior **sin
+recargar** — un conf malo nunca llega a estar activo. Al final comprueba las
+cinco rutas que importan contra `127.0.0.1`, que es por donde entra el túnel.
+
+Configurable por entorno: `SERVIDOR=ubuntu@vps`, `DOMINIO=otro.dev`.
+
+A mano, si hiciera falta:
 
 ```bash
 node build.mjs && node scripts/check.mjs
@@ -115,6 +132,10 @@ resuelve y que conviene no "arreglar" de vuelta:
 - **`absolute_redirect off`.** Si no, nginx completa cada `Location` con
   `$scheme`, que acá vale `http`, y manda de vuelta al borde por un salto de
   más — sin "Always Use HTTPS", directamente deja al visitante en http.
+- **`listen 127.0.0.1:80`**, no `listen 80`. El único que tiene que llegar es
+  cloudflared. Ojo si algún día agregás otro vhost: mezclar `listen 80` con
+  `listen 127.0.0.1:80` hace que nginx intente bindear `0.0.0.0:80` y
+  `127.0.0.1:80` a la vez y no arranque. Todos en loopback, o ninguno.
 
 El `Cache-Control` sale de un `map` y no de un `add_header` por location a
 propósito: nginx **no hereda** `add_header` hacia un nivel que declara el suyo,
