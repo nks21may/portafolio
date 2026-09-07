@@ -132,6 +132,22 @@ fi
 $SUDO systemctl reload nginx
 verde "  nginx recargado"
 
+# El reload es asíncrono: nginx levanta workers con la configuración nueva y
+# deja que los viejos terminen lo que están sirviendo. Comprobar de inmediato
+# mide la configuración ANTERIOR, y el resultado es un cuadro de fallos que no
+# existen — rutas que "no redirigen" y una home sin CSP, porque quien contesta
+# todavía es el vhost que acabamos de reemplazar. Así que se espera a que los
+# workers viejos se retiren antes de medir nada.
+sleep 1
+espera=0
+while [ "$espera" -lt 30 ] && ps -eo args= 2>/dev/null | grep -q 'nginx: worker process is shutting down'; do
+  sleep 1
+  espera=$((espera + 1))
+done
+if [ "$espera" -gt 0 ]; then
+  echo "  esperé ${espera}s a que salieran los workers de la configuración anterior"
+fi
+
 # Un backup por despliegue se acumula. Recién acá, con el reload hecho: hasta
 # este punto el más nuevo era el que hacía falta para volver atrás.
 ls -1t "$VHOST".bak-* 2>/dev/null | tail -n +6 | xargs -r $SUDO rm -f
