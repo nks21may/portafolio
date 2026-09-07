@@ -84,9 +84,14 @@ $SUDO chown -R "$DUENO" "$RAIZ.nuevo"
 $SUDO find "$RAIZ.nuevo" -type d -exec chmod 755 {} +
 $SUDO find "$RAIZ.nuevo" -type f -exec chmod 644 {} +
 
+# En el primer despliegue no hay nada que conservar, y entonces tampoco hay a
+# dónde volver: los mensajes de más abajo tienen que decir eso y no ofrecer un
+# comando que falla.
+HABIA_CONTENIDO=no
 if [ -d "$RAIZ" ]; then
   $SUDO rm -rf "$RAIZ.anterior"
   $SUDO mv "$RAIZ" "$RAIZ.anterior"
+  HABIA_CONTENIDO=si
   echo "  el contenido anterior quedó en $RAIZ.anterior"
 fi
 $SUDO mv "$RAIZ.nuevo" "$RAIZ"
@@ -116,7 +121,11 @@ if ! $SUDO nginx -t; then
     $SUDO rm -f "$VHOST" "$ENLACE"
     echo "  no había vhost previo: quedó desinstalado."
   fi
-  rojo "El contenido nuevo quedó publicado (el anterior, en $RAIZ.anterior)."
+  if [ "$HABIA_CONTENIDO" = si ]; then
+    rojo "El contenido nuevo quedó publicado (el anterior, en $RAIZ.anterior)."
+  else
+    rojo "El contenido nuevo quedó en $RAIZ. No había nada antes ahí."
+  fi
   exit 1
 fi
 
@@ -159,8 +168,23 @@ curl -s -D - -o /dev/null --max-time 5 -H "Host: $DOMINIO" "$BASE/" \
 if [ "$fallos" -gt 0 ]; then
   echo
   rojo "$fallos comprobación(es) fallaron. Para volver atrás:"
-  echo "  sudo rm -rf $RAIZ && sudo mv $RAIZ.anterior $RAIZ"
-  echo "  sudo cp $VHOST.bak-$SELLO $VHOST && sudo systemctl reload nginx"
+  if [ -f "$VHOST.bak-$SELLO" ]; then
+    echo "  sudo cp $VHOST.bak-$SELLO $VHOST"
+    echo "  sudo nginx -t && sudo systemctl reload nginx"
+  else
+    echo "  no había vhost previo; para desinstalar este:"
+    echo "  sudo rm -f $VHOST $ENLACE && sudo nginx -t && sudo systemctl reload nginx"
+  fi
+  if [ "$HABIA_CONTENIDO" = si ]; then
+    echo "  sudo rm -rf $RAIZ && sudo mv $RAIZ.anterior $RAIZ"
+  else
+    echo "  y si querés borrar lo publicado: sudo rm -rf $RAIZ"
+  fi
+  echo
+  echo "Antes de volver atrás, mirá si lo que respondió es este vhost:"
+  echo "  curl -sI -H 'Host: $DOMINIO' $BASE/ | head -1"
+  echo "  sudo nginx -T | grep -n 'server_name\\|listen\\|root /'"
+  echo "Si la home no trae content-security-policy, está contestando otro server."
   exit 1
 fi
 
