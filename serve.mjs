@@ -3,7 +3,7 @@
  *
  *   node serve.mjs
  *
- * Levanta una variante por puerto. Hace falta un servidor de verdad (y no
+ * Sirve dist/ en http://localhost:4003/. Hace falta un servidor de verdad (y no
  * abrir el index.html con file://) porque las páginas referencian /assets/... y
  * /en/ con rutas absolutas, igual que en producción.
  */
@@ -15,11 +15,7 @@ import { fileURLToPath } from 'node:url';
 
 const ROOT = dirname(fileURLToPath(import.meta.url));
 
-const PORTS = {
-  'b-terminal': 4001,
-  'a-editorial': 4002,
-  'd-ficha': 4003,
-};
+const PORT = 4003;
 
 const TYPES = {
   '.html': 'text/html; charset=utf-8',
@@ -36,8 +32,8 @@ const TYPES = {
   '.pdf': 'application/pdf',
 };
 
-function serve(variant, port) {
-  const base = join(ROOT, 'dist', variant);
+function serve(port) {
+  const base = join(ROOT, 'dist');
 
   createServer(async (req, res) => {
     try {
@@ -63,9 +59,9 @@ function serve(variant, port) {
       res.end('404');
     }
   }).listen(port, () => {
-    console.log(`${variant.padEnd(12)} http://localhost:${port}/   (en: http://localhost:${port}/en/)`);
+    console.log(`http://localhost:${port}/   (en: http://localhost:${port}/en/)`);
   });
 }
 
-for (const [variant, port] of Object.entries(PORTS)) serve(variant, port);
+serve(PORT);
 console.log('\nCtrl+C para cortar.');

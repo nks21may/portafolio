@@ -5,8 +5,8 @@
  * un rojo de keyline que funciona como marca de registro, no como decoración.
  * Aparece en el filo superior, en los números de registro y en nada más.
  *
- * El oscuro es pizarra fría, no marrón: esta variante quiere leerse como
- * documento impreso, y un dark cálido la volvería otra cosa.
+ * El oscuro es pizarra fría, no marrón: el sitio quiere leerse como documento
+ * impreso, y un dark cálido lo volvería otra cosa.
  */
 
 export const light = {
@@ -87,7 +87,7 @@ export const themeColor = { light: light.paper, dark: dark.paper };
 
 /**
  * Schibsted Grotesk es variable, así que una sola cara cubre de 400 a 700 —
- * y esta variante usa los tres pesos. IBM Plex Mono lleva las columnas de
+ * y el sitio usa los tres pesos. IBM Plex Mono lleva las columnas de
  * etiqueta, que es donde vive el aire de ficha.
  */
 export const fonts = [

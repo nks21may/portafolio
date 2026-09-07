@@ -16,7 +16,6 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const VARIANTS = ['b-terminal', 'a-editorial', 'd-ficha'];
 const PAGES = [
   { lang: 'es', file: 'index.html', dir: '/' },
   { lang: 'en', file: 'en/index.html', dir: '/en/' },
@@ -30,9 +29,9 @@ const fail = (where, msg) => { failures++; console.error(`  ✗ ${where}: ${msg}
 /** Cuenta etiquetas de apertura, sin parsear HTML de verdad. */
 const count = (html, re) => (html.match(re) || []).length;
 
-async function checkPage(variant, page) {
-  const where = `${variant}/${page.file}`;
-  const path = join(ROOT, 'dist', variant, page.file);
+async function checkPage(page) {
+  const where = page.file;
+  const path = join(ROOT, 'dist', page.file);
   if (!(await exists(path))) return fail(where, 'no existe'), null;
 
   const html = await readFile(path, 'utf8');
@@ -96,7 +95,7 @@ async function checkPage(variant, page) {
 
   /* — todo asset referenciado tiene que estar en dist — */
   for (const m of html.matchAll(/(?:href|src)="(\/assets\/[^"]+)"/g)) {
-    if (!(await exists(join(ROOT, 'dist', variant, m[1])))) {
+    if (!(await exists(join(ROOT, 'dist', m[1])))) {
       fail(where, `referencia ${m[1]} pero el archivo no está`);
     }
   }
@@ -117,35 +116,32 @@ async function checkPage(variant, page) {
   };
 }
 
-for (const variant of VARIANTS) {
-  console.log(`\n${variant}`);
-  const shapes = [];
-  for (const page of PAGES) {
-    const shape = await checkPage(variant, page);
-    if (shape) shapes.push({ page, shape });
-  }
+const shapes = [];
+for (const page of PAGES) {
+  const shape = await checkPage(page);
+  if (shape) shapes.push({ page, shape });
+}
 
-  /* Los dos idiomas tienen que tener la misma estructura: si uno perdió una
-     sección o un proyecto, se nota acá y en ningún otro lado. */
-  if (shapes.length === 2) {
-    const [a, b] = shapes;
-    for (const k of Object.keys(a.shape)) {
-      if (a.shape[k] !== b.shape[k]) {
-        fail(variant, `es y en no coinciden en ${k}: ${a.shape[k]} vs ${b.shape[k]}`);
-      }
-    }
-    if (!failures) {
-      const s = a.shape;
-      console.log(`  ✓ es/en con la misma estructura — ${s.h2} h2, ${s.h3} h3, ${s.h4} h4, ${s.chips} chips, ${s.links} links`);
+/* Los dos idiomas tienen que tener la misma estructura: si uno perdió una
+   sección o un proyecto, se nota acá y en ningún otro lado. */
+if (shapes.length === 2) {
+  const [a, b] = shapes;
+  for (const k of Object.keys(a.shape)) {
+    if (a.shape[k] !== b.shape[k]) {
+      fail('dist', `es y en no coinciden en ${k}: ${a.shape[k]} vs ${b.shape[k]}`);
     }
   }
+  if (!failures) {
+    const s = a.shape;
+    console.log(`  ✓ es/en con la misma estructura — ${s.h2} h2, ${s.h3} h3, ${s.h4} h4, ${s.chips} chips, ${s.links} links`);
+  }
+}
 
-  for (const f of ['sitemap.xml', 'robots.txt', 'site.webmanifest']) {
-    if (!(await exists(join(ROOT, 'dist', variant, f)))) fail(variant, `falta ${f}`);
-  }
-  if (!(await exists(join(ROOT, 'deploy', `${variant}-nginx.conf`)))) {
-    fail(variant, 'falta su nginx.conf en deploy/');
-  }
+for (const f of ['sitemap.xml', 'robots.txt', 'site.webmanifest']) {
+  if (!(await exists(join(ROOT, 'dist', f)))) fail('dist', `falta ${f}`);
+}
+if (!(await exists(join(ROOT, 'deploy', 'nginx.conf')))) {
+  fail('deploy', 'falta nginx.conf');
 }
 
 console.log('');

@@ -226,9 +226,8 @@ export default {
   contact: {
     title: 'Hablemos',
     /* Dos piezas, no una frase: `seeking` es el filtro de fit y viaja arriba de
-       todo en las variantes que lo tratan como un campo más de la ficha; `lead`
-       es el cierre y se queda abajo. Las que no separan muestran las dos juntas
-       y leen igual que antes. */
+       todo, como un campo más de la ficha; `lead` es el cierre y se queda
+       abajo. */
     seekingLabel: 'Busco',
     seeking: 'Roles backend senior, fullstack o de AI engineering — remoto',
     lead: 'Si estás evaluando a alguien para un puesto así, escribime y te contesto.',

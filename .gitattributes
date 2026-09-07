@@ -1,0 +1,13 @@
+# El sitio se despliega en Linux y la CSP lleva el hash SHA-256 del CSS: si el
+# working tree cambia de finales de línea según el sistema, el hash cambia con
+# él y la página queda rota en producción y sana en desarrollo. Así que acá se
+# guarda LF y se checkoutea LF, en Windows también.
+* text=auto eol=lf
+
+# El CV es un PDF ASCII plano, sin bytes NUL, así que git lo toma por texto y
+# con core.autocrlf lo convierte a CRLF al clonar. Los offsets de la tabla xref
+# se corren y el archivo sale roto justo del clon que usa el servidor.
+*.pdf   -text
+*.png   -text
+*.woff2 -text
+*.ico   -text

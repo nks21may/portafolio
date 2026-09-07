@@ -1,7 +1,7 @@
 /* ============================================================================
-   D — ficha técnica
+   Ficha técnica
    ----------------------------------------------------------------------------
-   Mobile primero. La unidad de esta variante es la fila etiqueta/valor: hasta
+   Mobile primero. La unidad del sitio es la fila etiqueta/valor: hasta
    48rem apila (etiqueta arriba, valor abajo) y a partir de ahí se vuelve una
    tabla de dos columnas de verdad. Eso es lo que la hace escaneable.
 

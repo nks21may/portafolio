@@ -3,8 +3,8 @@
  * fotografiarlas después con Chrome a 1200×630.
  *
  *   node build.mjs                     (primero: hacen falta las fuentes)
- *   node scripts/make-og.mjs           escribe dist/<v>/_og-es.html y _og-en.html
- *   ... capturar con Chrome a assets/og/<v>-<lang>.png ...
+ *   node scripts/make-og.mjs           escribe dist/_og-es.html y dist/_og-en.html
+ *   ... capturar con Chrome a assets/og/og-<lang>.png ...
  *   node build.mjs                     de nuevo: dist limpio y con las PNG
  *
  * Van dentro de dist/ y no en un temporal para que /assets/fonts/... resuelva
@@ -25,26 +25,20 @@ import es from '../content/es.js';
 import en from '../content/en.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const VARIANTS = ['b-terminal', 'a-editorial', 'd-ficha'];
 const LOCALES = [es, en];
 
-const requested = process.argv.slice(2).filter((a) => !a.startsWith('-'));
-const targets = requested.length ? requested : VARIANTS;
+const tokens = await import(pathToFileURL(join(ROOT, 'site/tokens.mjs')).href);
+const { css: fontCss } = await ensureFonts({
+  specs: tokens.fonts,
+  outDir: join(ROOT, 'assets/fonts'),
+});
 
-for (const variant of targets) {
-  const tokens = await import(pathToFileURL(join(ROOT, `sites/${variant}/tokens.mjs`)).href);
-  const { css: fontCss } = await ensureFonts({
-    specs: tokens.fonts,
-    outDir: join(ROOT, 'assets/fonts'),
-  });
+const palette = tokens.og.theme === 'dark' ? tokens.dark : tokens.light;
 
-  const palette = tokens.og.theme === 'dark' ? tokens.dark : tokens.light;
-
-  for (const locale of LOCALES) {
-    const model = buildModel({ locale, shared });
-    const html = renderOgCard({ model, palette, fontCss, style: tokens.og });
-    const dest = join(ROOT, 'dist', variant, `_og-${locale.lang}.html`);
-    await writeFile(dest, html, 'utf8');
-    console.log(`${dest}`);
-  }
+for (const locale of LOCALES) {
+  const model = buildModel({ locale, shared });
+  const html = renderOgCard({ model, palette, fontCss, style: tokens.og });
+  const dest = join(ROOT, 'dist', `_og-${locale.lang}.html`);
+  await writeFile(dest, html, 'utf8');
+  console.log(`${dest}`);
 }

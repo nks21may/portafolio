@@ -221,9 +221,8 @@ export default {
   contact: {
     title: 'Let’s talk',
     /* Two pieces, not one sentence: `seeking` is the fit filter and travels to
-       the top in variants that treat it as another field of the spec; `lead` is
-       the close and stays at the bottom. Variants that do not split show both
-       together and read as before. */
+       the top, as another field of the spec; `lead` is the close and stays at
+       the bottom. */
     seekingLabel: 'Looking for',
     seeking: 'Senior backend, fullstack or AI engineering roles — remote',
     lead: 'If you are evaluating someone for a role like that, write to me and I will reply.',

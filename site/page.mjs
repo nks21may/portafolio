@@ -9,9 +9,9 @@
  * Igual que en A y B: ningún atributo style="" (la CSP va con hash del <style>).
  */
 
-import { esc, attr, richText } from '../../lib/html.mjs';
-import { icons } from '../../lib/icons.mjs';
-import { highlightPython } from '../../lib/pycode.mjs';
+import { esc, attr, richText } from '../lib/html.mjs';
+import { icons } from '../lib/icons.mjs';
+import { highlightPython } from '../lib/pycode.mjs';
 
 /* ── piezas chicas ───────────────────────────────────────────────────────── */
 
@@ -42,7 +42,7 @@ const bindTail = (s) => {
     : `${esc(head.slice(0, cut + 1))}${tie(head.slice(cut + 1) + tail)}`;
 };
 
-/** La unidad de esta variante: una fila etiqueta / valor. */
+/** La unidad del sitio: una fila etiqueta / valor. */
 const row = (label, value, cls = '') =>
   `<div class="row${cls ? ' ' + cls : ''}"><dt>${esc(label)}</dt><dd>${value}</dd></div>`;
 
