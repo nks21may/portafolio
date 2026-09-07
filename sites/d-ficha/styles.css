@@ -110,7 +110,12 @@ a { color: inherit; }
   letter-spacing: -0.025em;
   text-decoration: none;
 }
+/* En móvil el masthead se queda solo con el nombre. Esta línea le competía el
+   lugar a la marca en una pantalla angosta, y el rol lo dicen igual el titular
+   y la fila "Busco", que están unos centímetros más abajo. El JSON-LD lo sigue
+   llevando en `jobTitle`, así que tampoco se pierde para un buscador. */
 .mast-sub {
+  display: none;
   font-size: 0.6875rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -527,6 +532,7 @@ a { color: inherit; }
 @media (min-width: 48rem) {
   .main, .masthead, .footer > * { padding-inline: 2rem; }
   .masthead { padding-top: 1.25rem; }
+  .mast-sub { display: block; }
   /* La nav sigue a ancho completo hasta 60rem: acompaña el padding del masthead. */
   .mast-nav { margin-inline: -2rem; padding-inline: 2rem; }
 
