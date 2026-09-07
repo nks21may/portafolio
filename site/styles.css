@@ -574,6 +574,89 @@ a { color: inherit; }
   .spec dd { font-size: 1.0625rem; }
 }
 
+/* ── rastro del puntero ─────────────────────────────────────────────────────
+   Lo único que se mueve con el mouse, y no es un fondo: es la propia unidad de
+   la página. Al pasar el puntero por una fila, su etiqueta sube de --ink-3 a
+   --ink y aparece una marca roja al margen — la misma marca de registro que ya
+   llevan la keyline y los números, hecha ahora al costado del renglón.
+
+   La transición es asimétrica a propósito: 100ms al entrar y 420ms al salir, y
+   la marca no se encoge cuando el puntero se va, se apaga a altura completa.
+   Barrer una lista deja entonces una estela de filas encendidas que se van
+   consumiendo detrás del cursor. Es el gesto de un tracker sin un canvas, sin
+   un requestAnimationFrame y sin un hash más en la CSP.
+
+   Todo detrás de (hover:hover) and (pointer:fine): en táctil el :hover queda
+   pegado después del tap, y en el teléfono la ficha tiene que verse igual que
+   hoy. :focus-within repite el efecto para quien navega con teclado, así el
+   rastro marca la fila activa de verdad y no sólo la que toca el mouse.
+   ────────────────────────────────────────────────────────────────────────── */
+
+@media (hover: hover) and (pointer: fine) {
+  .row { position: relative; }
+
+  /* La marca vive en el margen, fuera de la columna de la etiqueta: no empuja
+     el texto ni le roba ancho a un valor largo. */
+  .row::before {
+    content: '';
+    position: absolute;
+    left: -0.75rem;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--accent);
+    opacity: 0;
+    transform: scaleY(0);
+    transform-origin: 50% 0;
+    /* El transform vuelve a cero recién cuando la opacidad terminó de irse:
+       eso es lo que hace que la marca se apague en vez de retraerse. */
+    transition: opacity 0.42s ease-in, transform 0s linear 0.42s;
+  }
+  .row:hover::before,
+  .row:focus-within::before {
+    opacity: 1;
+    transform: scaleY(1);
+    transition: opacity 0.1s linear, transform 0.14s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .row dt { transition: color 0.42s ease-in; }
+  .row:hover dt,
+  .row:focus-within dt { color: var(--ink); transition-duration: 0.1s; }
+
+  /* El número de registro se sella al pasar por su proyecto o su capa. El par
+     --accent-ink sobre --accent es el del botón primario, que tokens.mjs ya
+     mide: el sello no estrena ninguna combinación sin chequear. El padding
+     lateral va compensado con un margen negativo, así el número no se corre de
+     la columna en la que está sin fondo. */
+  .project-n, .n {
+    justify-self: start;
+    align-self: start;
+    margin-left: -0.375rem;
+    /* El sello no arrastra la estela: sale en 160ms. Desvanecerlo con los
+       mismos 420ms de la marca lo dejaba medio segundo en blanco sobre rojo
+       aguado, que es el unico estado de toda la pagina que no se lee. La
+       estela la hace la marca del margen, que no lleva texto encima. */
+    transition: background-color 0.16s ease-in, color 0.16s ease-in;
+  }
+  .project-n { padding: 0.3125rem 0.375rem 0.1875rem; }
+  .n { padding: 0.1875rem 0.375rem 0.125rem; }
+
+  .project:hover .project-n,
+  .project:focus-within .project-n,
+  .row.is-numbered:hover .n,
+  .row.is-numbered:focus-within .n {
+    background: var(--accent);
+    color: var(--accent-ink);
+    transition-duration: 0.1s;
+  }
+}
+
+/* El bloque de abajo apaga las duraciones, pero no los retardos: el de la marca
+   la dejaría 420ms encendida y recién ahí saltaría a cero. */
+@media (prefers-reduced-motion: reduce) {
+  .row::before { transition-delay: 0s !important; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after {
