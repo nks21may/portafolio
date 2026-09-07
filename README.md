@@ -86,28 +86,38 @@ deploy/nginx.conf   la config del servidor, generada
 
 ## Desplegar
 
+**En el servidor**, desde el clon del repo:
+
 ```bash
-sh deploy.sh
+git pull && sh deploy.sh
 ```
 
-Construye, corre el verificador, sube `dist/` y recarga nginx. Si el build o el
-check fallan, no sale nada del disco local.
+Construye, corre el verificador, publica `dist/` en `/var/www/<dominio>` e
+instala el `nginx.conf` generado. Si el build o el check fallan, no toca nada.
 
-En el servidor el contenido se desempaqueta al lado y recién ahí se cambia de
-lugar: el `mv` de un directorio dentro del mismo filesystem es atómico, así que
-nadie ve el sitio a medio copiar y el anterior queda entero en
-`/var/www/<dominio>.anterior`. El vhost se guarda con fecha antes de pisarlo, y
-si `nginx -t` rechaza la configuración nueva se restaura el anterior **sin
-recargar** — un conf malo nunca llega a estar activo. Al final comprueba las
-cinco rutas que importan contra `127.0.0.1`, que es por donde entra el túnel.
+Pide `sudo` sólo para escribir en `/var/www` y `/etc/nginx` y para recargar.
+El build corre con tu usuario a propósito: con `sudo` dejaría `dist/` y
+`assets/fonts/` como root adentro del repo, y el próximo `git pull` o el
+próximo build sin `sudo` fallarían por permisos.
 
-Configurable por entorno: `SERVIDOR=ubuntu@vps`, `DOMINIO=otro.dev`.
+El contenido se copia al lado y recién ahí se cambia de lugar: el `mv` de un
+directorio dentro del mismo filesystem es atómico, así que nadie ve el sitio a
+medio copiar y el anterior queda entero en `/var/www/<dominio>.anterior`. El
+vhost se guarda con fecha antes de pisarlo, y si `nginx -t` rechaza la
+configuración nueva se restaura la anterior **sin recargar** — un conf malo no
+llega a estar activo. Al final comprueba cinco rutas contra `127.0.0.1`, que es
+por donde entra el túnel, y si alguna falla imprime los comandos para volver
+atrás.
+
+Hace falta `node` en el servidor: `dist/` no se versiona, el HTML se genera ahí.
+
+Configurable por entorno: `DOMINIO=otro.dev sh deploy.sh`.
 
 A mano, si hiciera falta:
 
 ```bash
 node build.mjs && node scripts/check.mjs
-rsync -av --delete dist/ servidor:/var/www/nicolasdalessandro.dev/
+sudo cp -a dist/. /var/www/nicolasdalessandro.dev/
 sudo cp deploy/nginx.conf /etc/nginx/sites-available/nicolasdalessandro.dev
 sudo ln -s /etc/nginx/sites-available/nicolasdalessandro.dev /etc/nginx/sites-enabled/
 sudo nginx -t && sudo systemctl reload nginx
