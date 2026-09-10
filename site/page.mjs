@@ -148,6 +148,20 @@ function project(m, p, index) {
 </figure>`
     : '';
 
+  /* La prueba de un proyecto puede ser un número en vez de un fragmento de
+     código: un antes/después medido, como tabla de ficha. La primera columna
+     de la cabecera no lleva texto a la vista, pero sí para el lector de
+     pantalla — una celda de cabecera vacía no le dice qué recorre la fila. */
+  const measure = p.measure
+    ? `<table class="measure">
+<caption>${esc(p.measure.caption)}</caption>
+<thead><tr><th scope="col"><span class="sr">${esc(ui.measureMetric)}</span></th><th scope="col">${esc(ui.measureBefore)}</th><th scope="col">${esc(ui.measureAfter)}</th></tr></thead>
+<tbody>${p.measure.rows
+        .map((r) => `<tr><th scope="row">${esc(r.label)}</th><td>${esc(r.before)}</td><td>${esc(r.after)}</td></tr>`)
+        .join('')}</tbody>
+</table>`
+    : '';
+
   return `<li class="project${p.featured ? ' is-featured' : ''}">
 <article aria-labelledby="p-${attr(p.id)}">
 <div class="project-head">
@@ -164,8 +178,9 @@ ${row(ui.approachLabel, esc(p.approach), 'is-key')}
 ${row(ui.stackLabel, `<span class="stack">${p.stack.map((s) => `<span class="chip">${esc(s)}</span>`).join('')}</span>`)}
 </dl>
 ${code}
+${measure}
 <ul class="highlights">${p.highlights.map((i) => `<li>${richText(i)}</li>`).join('')}</ul>
-${p.url ? `<p class="project-link">${ext(p.url, ui.liveSite, ui)}</p>` : ''}
+${p.url ? `<p class="project-link">${ext(p.url, p.urlLabel ?? ui.liveSite, ui)}</p>` : ''}
 ${p.repo ? `<p class="project-link">${ext(p.repo, ui.sourceCode, ui)}</p>` : ''}
 </article>
 </li>`;

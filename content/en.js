@@ -36,6 +36,9 @@ export default {
     codeCaption: 'How the tools get derived, simplified',
     problemLabel: 'The problem',
     approachLabel: 'What I did',
+    measureMetric: 'Metric',
+    measureBefore: 'Before',
+    measureAfter: 'After',
   },
 
   nav: [
@@ -77,7 +80,7 @@ export default {
   sections: {
     trabajo: {
       title: 'Work',
-      intro: 'Five systems. What each one solved, what I decided, and what it runs on.',
+      intro: 'Seven systems. What each one solved, what I decided, and what it runs on.',
     },
     experiencia: { title: 'Experience' },
     habilidades: { title: 'Skills' },
@@ -122,6 +125,30 @@ export default {
         'Integrated an external content-certification service: evidence of a phishing site gets timestamped and signed so it holds up in a legal claim.',
         'I documented the business rules as a structured knowledge base — entities, flows, ADRs and API references — built to be consumed by an agent.',
       ],
+    },
+
+    neonduel: {
+      title: 'NEONDUEL: a 1v1 shooter with an authoritative server',
+      context: 'Personal project',
+      period: 'in production',
+      lead: 'A 3D shooter that runs in the browser, with Counter-Strike movement and a server that is the only source of truth: the client decides which keys it presses, and nothing else.',
+      problem:
+        'A networked duel has to feel instant to whoever is playing and be fair to both of them. If the client waits on the server to move, every step costs a round trip; if the server trusts the client, cheating is a matter of sending a different number.',
+      approach:
+        'The simulation lives in a shared package: client and server run exactly the same code on the same data. The client predicts its own movement and reconciles it against the server, draws the opponent 100 ms in the past, and to resolve each shot the server rewinds the world to the moment the shooter was looking at.',
+      highlights: [
+        'Latency is measured by the server, not declared by the client. It keeps the minimum of a one-second window, so inflating it right as you fire means sustaining the lie for the whole window — and the rewind never goes past 200 ms.',
+        'Delta snapshots: only what changed since the previous one goes over the wire, and once a second a full one goes out so any drift heals on its own, for 1.6% of the traffic.',
+        'The server validates every message before it touches the physics — rejecting <code>NaN</code>, inflated <code>dt</code> and replayed sequences — and processes at most eight commands per tick, so catching up never turns into running faster.',
+        'Dropping is not leaving: the server holds the player’s slot for ten seconds, and an opaque ticket brings back the same player, with their health and position, into the round in progress.',
+        '486 tests over a simulation that never reads the clock, so a full match runs in milliseconds. One boots the real server and talks to it over WebSocket the way a browser would; another checks the map is symmetric piece by piece, which in a 1v1 is a fairness requirement.',
+      ],
+      urlLabel: 'Play NEONDUEL',
+      measure: {
+        caption:
+          'Delta snapshots, before and after. Measured against the real server: twelve seconds of a match against the bot.',
+        rows: { snapshot: 'Per snapshot', traffic: 'Server traffic' },
+      },
     },
 
     'health-scheduling': {
@@ -171,6 +198,23 @@ export default {
         'DNS managed on Cloudflare.',
         'Hardened access and a minimal exposed surface.',
       ],
+    },
+
+    'surf-bhop': {
+      title: 'Surf & Bhop Daily: daily races with anti-cheat by re-simulation',
+      context: 'Personal project',
+      period: 'in production',
+      lead: 'A surf and bunnyhop game with Counter-Strike physics, in the browser. Every day at 00:00 UTC the date generates a new track, the same one for everybody, and the leaderboard ranks by time.',
+      problem:
+        'A leaderboard played in the browser cannot take the client’s word for anything: from the console, anyone can report whatever time they like or turn up right at the finish line.',
+      approach:
+        'The server never receives times or positions: it receives the inputs, recorded tick by tick. It generates the day’s track from the same seed and runs the race again on the same physics engine the client uses. If the simulation does not reach the finish, or its time does not match the reported one, the run stays off the leaderboard.',
+      highlights: [
+        'Fixed-step physics at 128 ticks per second, shared by client and server: the re-simulation runs the same code that ran in the browser.',
+        'Every track is checked against a geometric invariant as it is generated: no ramp may overlap another. A test sweeps it across 100 seeds.',
+        'Discord login over OAuth2, guarded against CSRF with <code>state</code>, and 120 tests that include impersonation attempts: a guest cannot race under a registered user’s name or overwrite someone else’s record.',
+      ],
+      urlLabel: 'Play Surf & Bhop Daily',
     },
   },
 

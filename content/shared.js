@@ -100,6 +100,23 @@ export const projects = [
     },
   },
   {
+    id: 'neonduel',
+    featured: false,
+    period: { start: '2026-08', end: null },
+    // Publicado en un subdominio propio, pero con el repo privado: por eso
+    // lleva `url` y no `repo`, que llevaría a un 404.
+    url: 'https://neonduel.nicolasdalessandro.dev/',
+    stack: ['TypeScript', 'Node.js', 'WebSocket', 'three.js', 'Vite', 'Vitest', 'Docker'],
+    // Antes y después de las instantáneas diferenciales, medido contra el
+    // servidor real. Las cifras viven acá y no en el copy para que los dos
+    // idiomas no puedan decir números distintos: cada uno pone sólo sus
+    // etiquetas y su separador decimal.
+    measure: [
+      { id: 'snapshot', unit: 'bytes', before: 579, after: 188 },
+      { id: 'traffic', unit: 'KB/s', before: 36.2, after: 11.7 },
+    ],
+  },
+  {
     id: 'health-scheduling',
     featured: false,
     period: { start: '2021-02', end: '2023-03' },
@@ -127,6 +144,14 @@ export const projects = [
     featured: false,
     period: { start: '2023-01', end: null },
     stack: ['Ubuntu', 'ARM64', 'Docker Compose', 'nginx', 'Cloudflare DNS'],
+  },
+  {
+    id: 'surf-bhop',
+    featured: false,
+    period: { start: '2026-09', end: null },
+    // Igual que NEONDUEL: se juega en su subdominio, el repo es privado.
+    url: 'https://surf.nicolasdalessandro.dev/',
+    stack: ['TypeScript', 'three.js', 'Fastify', 'SQLite', 'Discord OAuth2', 'Vitest', 'Docker'],
   },
 ];
 

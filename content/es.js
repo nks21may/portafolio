@@ -36,6 +36,9 @@ export default {
     codeCaption: 'Cómo se derivan las herramientas, simplificado',
     problemLabel: 'El problema',
     approachLabel: 'Qué hice',
+    measureMetric: 'Métrica',
+    measureBefore: 'Antes',
+    measureAfter: 'Ahora',
   },
 
   nav: [
@@ -82,7 +85,7 @@ export default {
   sections: {
     trabajo: {
       title: 'Trabajo',
-      intro: 'Cinco sistemas. Qué resolvían, qué decidí y con qué está hecho.',
+      intro: 'Siete sistemas. Qué resolvían, qué decidí y con qué está hecho.',
     },
     experiencia: { title: 'Experiencia' },
     habilidades: { title: 'Habilidades' },
@@ -127,6 +130,30 @@ export default {
         'Integré un servicio externo de certificación de contenidos: la evidencia de un phishing queda sellada con fecha y firma para un reclamo legal.',
         'Documenté las reglas de negocio como base de conocimiento estructurada — entidades, flujos, ADRs y referencias de API — pensada para que la consuma un agente.',
       ],
+    },
+
+    neonduel: {
+      title: 'NEONDUEL: shooter 1 contra 1 con servidor autoritativo',
+      context: 'Proyecto propio',
+      period: 'en producción',
+      lead: 'Un shooter 3D que corre en el navegador, con el movimiento de Counter-Strike y un servidor que es la única fuente de verdad: el cliente decide qué teclas aprieta, y nada más.',
+      problem:
+        'Un duelo en red tiene que sentirse inmediato para quien juega y ser justo para los dos. Si el cliente espera al servidor para moverse, cada paso cuesta un viaje de ida y vuelta; si el servidor le cree al cliente, hacer trampa es cuestión de mandar otro número.',
+      approach:
+        'La simulación vive en un paquete compartido: cliente y servidor corren exactamente el mismo código sobre los mismos datos. El cliente predice su propio movimiento y lo reconcilia con el servidor, al rival lo dibuja 100 ms en el pasado, y para resolver cada disparo el servidor rebobina el mundo al instante que veía el tirador.',
+      highlights: [
+        'La latencia la mide el servidor, no la declara el cliente. De un segundo de medidas se queda con el mínimo, así que inflarla justo al disparar obliga a sostener la mentira durante toda la ventana — y el rebobinado nunca pasa de 200 ms.',
+        'Instantáneas diferenciales: sólo viaja lo que cambió desde la anterior, y una vez por segundo va una completa para que cualquier desajuste se cure solo, a cambio del 1,6 % del tráfico.',
+        'El servidor valida cada mensaje antes de tocar la física — rechaza <code>NaN</code>, <code>dt</code> inflados y secuencias repetidas — y procesa como mucho ocho comandos por tick, para que ponerse al día nunca sea correr más rápido.',
+        'Caerse no es irse: el servidor le guarda el lugar al jugador diez segundos, y con un ticket opaco vuelve el mismo jugador, con su vida y su posición, a la ronda en curso.',
+        '486 tests sobre una simulación que no consulta el reloj, así que una partida entera corre en milisegundos. Uno levanta el servidor real y le habla por WebSocket como lo haría el navegador; otro comprueba que el mapa es simétrico pieza por pieza, que en un 1 contra 1 es una condición de justicia.',
+      ],
+      urlLabel: 'Jugar a NEONDUEL',
+      measure: {
+        caption:
+          'Instantáneas diferenciales, antes y después. Medido contra el servidor real: doce segundos de partida contra el bot.',
+        rows: { snapshot: 'Por instantánea', traffic: 'Tráfico del servidor' },
+      },
     },
 
     'health-scheduling': {
@@ -176,6 +203,23 @@ export default {
         'DNS propio administrado en Cloudflare.',
         'Endurecimiento de acceso y superficie expuesta mínima.',
       ],
+    },
+
+    'surf-bhop': {
+      title: 'Surf & Bhop Daily: carreras diarias con anti-cheat por resimulación',
+      context: 'Proyecto propio',
+      period: 'en producción',
+      lead: 'Un juego de surf y bunnyhop con la física de Counter-Strike, en el navegador. Todos los días a las 00:00 UTC la fecha genera una pista nueva, la misma para todos, y el ranking es por tiempo.',
+      problem:
+        'Un ranking que se juega en el navegador no puede creerle al cliente: desde la consola, cualquiera reporta el tiempo que quiere o aparece directo en la meta.',
+      approach:
+        'El servidor no recibe tiempos ni posiciones: recibe los inputs, grabados tick a tick. Genera la pista del día desde la misma semilla y vuelve a correr la carrera con el mismo motor de física que usa el cliente. Si la simulación no llega a la meta, o su tiempo no coincide con el reportado, la carrera no entra al ranking.',
+      highlights: [
+        'Física de paso fijo a 128 ticks por segundo, compartida entre cliente y servidor: la resimulación corre el mismo código que corrió en el navegador.',
+        'Cada pista se verifica al generarse contra un invariante geométrico: ninguna rampa puede superponerse con otra. Un test lo barre sobre 100 semillas.',
+        'Login con Discord por OAuth2, protegido contra CSRF con <code>state</code>, y 120 tests que incluyen los intentos de suplantación: un invitado no puede correr con el nombre de un usuario registrado ni pisarle el récord a otro.',
+      ],
+      urlLabel: 'Jugar a Surf & Bhop Daily',
     },
   },
 

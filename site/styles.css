@@ -68,7 +68,8 @@ a { color: inherit; }
 
 /* Monoespaciada sólo para etiquetas y metadatos: es lo que da el aire de ficha. */
 .row dt, .rec-head h2, .rec-meta, .period, .chip, .project-n, .n,
-.lang, .pending, .rights, .mast-sub, .teamwork h4, .code {
+.lang, .pending, .rights, .mast-sub, .teamwork h4, .code,
+.measure caption, .measure thead th, .measure td {
   font-family: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 
@@ -358,7 +359,9 @@ a { color: inherit; }
   color: var(--ink-3);
 }
 .period { font-size: 0.6875rem; color: var(--ink-3); }
-.project-lead { font-size: 0.9375rem; color: var(--ink); max-width: 68ch; }
+/* pretty, como el resto de los textos largos: sin esto el lead de NEONDUEL
+   dejaba "más." solo en el último renglón. */
+.project-lead { font-size: 0.9375rem; color: var(--ink); max-width: 68ch; text-wrap: pretty; }
 
 .fields { display: flex; flex-direction: column; }
 .fields .row:last-child { border-bottom: 0; }
@@ -427,6 +430,50 @@ a { color: inherit; }
 .tok-s { color: var(--live); }
 .tok-f { color: var(--ink); font-weight: 500; }
 .tok-n { color: var(--ink-2); }
+
+/* ── medición ───────────────────────────────────────────────────────────────
+   Cuando lo que prueba un proyecto es un número y no un fragmento de código.
+   Es una ficha más: reglas de fila, cabecera en la misma mono chica que las
+   etiquetas y cifras tabulares alineadas a la derecha, para que cada columna
+   se compare de un vistazo. Sin fondo y sin borde de color: el rojo sigue
+   siendo de la keyline, los números de registro y los links.
+
+   El ancho va topado a propósito. A todo lo ancho de la hoja la cifra quedaba
+   a media pantalla de su etiqueta, y es justo la distancia que una regla de
+   1px no alcanza a atar. El "antes" va en --ink-3 y el "ahora" en --ink: la
+   lectura va de lo que había a lo que quedó sin necesitar una flecha. */
+.measure {
+  width: 100%;
+  max-width: 32rem;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+.measure caption {
+  caption-side: bottom;
+  margin-top: 0.5rem;
+  text-align: left;
+  font-size: 0.625rem;
+  color: var(--ink-3);
+}
+.measure th, .measure td {
+  padding: 0.5625rem 0;
+  font-weight: 400;
+  text-align: left;
+  vertical-align: baseline;
+}
+.measure thead th {
+  padding-top: 0;
+  font-size: 0.6875rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  border-bottom: 1px solid var(--ink);
+}
+.measure tbody tr { border-bottom: 1px solid var(--rule); }
+.measure tbody th { padding-right: 1rem; font-size: 0.9375rem; color: var(--ink-2); }
+.measure td, .measure thead th + th { padding-left: 1rem; text-align: right; white-space: nowrap; }
+.measure td { font-size: 0.8125rem; color: var(--ink-3); }
+.measure td:last-child { color: var(--ink); font-weight: 500; }
 
 /* ── experiencia ────────────────────────────────────────────────────────── */
 
