@@ -1,0 +1,655 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-10T07:00:49.754Z",
+  "title": "Design System: Nicolás D'Alessandro — Portfolio",
+  "extensions": {
+    "colorMeta": {
+      "paper": {
+        "role": "neutral",
+        "displayName": "Blanco de papel",
+        "canonical": "#FFFFFF",
+        "oklch": "oklch(100.0% 0.000 0)",
+        "tonalRamp": [
+          "oklch(15.0% 0.000 0)",
+          "oklch(26.0% 0.000 0)",
+          "oklch(38.0% 0.000 0)",
+          "oklch(49.0% 0.000 0)",
+          "oklch(61.0% 0.000 0)",
+          "oklch(72.0% 0.000 0)",
+          "oklch(84.0% 0.000 0)",
+          "oklch(95.0% 0.000 0)"
+        ]
+      },
+      "paper-2": {
+        "role": "neutral",
+        "displayName": "Papel alterno",
+        "canonical": "#FAFAFA",
+        "oklch": "oklch(98.5% 0.000 0)",
+        "tonalRamp": [
+          "oklch(15.0% 0.000 0)",
+          "oklch(26.0% 0.000 0)",
+          "oklch(38.0% 0.000 0)",
+          "oklch(49.0% 0.000 0)",
+          "oklch(61.0% 0.000 0)",
+          "oklch(72.0% 0.000 0)",
+          "oklch(84.0% 0.000 0)",
+          "oklch(95.0% 0.000 0)"
+        ]
+      },
+      "paper-3": {
+        "role": "neutral",
+        "displayName": "Papel hundido",
+        "canonical": "#F1F2F3",
+        "oklch": "oklch(96.1% 0.002 0)",
+        "tonalRamp": [
+          "oklch(15.0% 0.002 0)",
+          "oklch(26.0% 0.002 0)",
+          "oklch(38.0% 0.002 0)",
+          "oklch(49.0% 0.002 0)",
+          "oklch(61.0% 0.002 0)",
+          "oklch(72.0% 0.002 0)",
+          "oklch(84.0% 0.002 0)",
+          "oklch(95.0% 0.002 0)"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Tinta casi negra",
+        "canonical": "#101112",
+        "oklch": "oklch(17.7% 0.003 248.0)",
+        "tonalRamp": [
+          "oklch(15.0% 0.003 248.0)",
+          "oklch(26.0% 0.003 248.0)",
+          "oklch(38.0% 0.003 248.0)",
+          "oklch(49.0% 0.003 248.0)",
+          "oklch(61.0% 0.003 248.0)",
+          "oklch(72.0% 0.003 248.0)",
+          "oklch(84.0% 0.003 248.0)",
+          "oklch(95.0% 0.003 248.0)"
+        ]
+      },
+      "ink-2": {
+        "role": "neutral",
+        "displayName": "Tinta de prosa",
+        "canonical": "#4A4D52",
+        "oklch": "oklch(41.9% 0.009 260.7)",
+        "tonalRamp": [
+          "oklch(15.0% 0.009 260.7)",
+          "oklch(26.0% 0.009 260.7)",
+          "oklch(38.0% 0.009 260.7)",
+          "oklch(49.0% 0.009 260.7)",
+          "oklch(61.0% 0.009 260.7)",
+          "oklch(72.0% 0.009 260.7)",
+          "oklch(84.0% 0.009 260.7)",
+          "oklch(95.0% 0.009 260.7)"
+        ]
+      },
+      "ink-3": {
+        "role": "neutral",
+        "displayName": "Tinta de metadato",
+        "canonical": "#666A70",
+        "oklch": "oklch(52.3% 0.011 258.4)",
+        "tonalRamp": [
+          "oklch(15.0% 0.011 258.4)",
+          "oklch(26.0% 0.011 258.4)",
+          "oklch(38.0% 0.011 258.4)",
+          "oklch(49.0% 0.011 258.4)",
+          "oklch(61.0% 0.011 258.4)",
+          "oklch(72.0% 0.011 258.4)",
+          "oklch(84.0% 0.011 258.4)",
+          "oklch(95.0% 0.011 258.4)"
+        ]
+      },
+      "rule": {
+        "role": "neutral",
+        "displayName": "Regla de fila",
+        "canonical": "#C0C4C9",
+        "oklch": "oklch(81.9% 0.008 253.9)",
+        "tonalRamp": [
+          "oklch(15.0% 0.008 253.9)",
+          "oklch(26.0% 0.008 253.9)",
+          "oklch(38.0% 0.008 253.9)",
+          "oklch(49.0% 0.008 253.9)",
+          "oklch(61.0% 0.008 253.9)",
+          "oklch(72.0% 0.008 253.9)",
+          "oklch(84.0% 0.008 253.9)",
+          "oklch(95.0% 0.008 253.9)"
+        ]
+      },
+      "rule-strong": {
+        "role": "neutral",
+        "displayName": "Regla de corte",
+        "canonical": "#9EA3A9",
+        "oklch": "oklch(71.3% 0.010 252.8)",
+        "tonalRamp": [
+          "oklch(15.0% 0.010 252.8)",
+          "oklch(26.0% 0.010 252.8)",
+          "oklch(38.0% 0.010 252.8)",
+          "oklch(49.0% 0.010 252.8)",
+          "oklch(61.0% 0.010 252.8)",
+          "oklch(72.0% 0.010 252.8)",
+          "oklch(84.0% 0.010 252.8)",
+          "oklch(95.0% 0.010 252.8)"
+        ]
+      },
+      "accent": {
+        "role": "primary",
+        "displayName": "Rojo de registro",
+        "canonical": "#C62D19",
+        "oklch": "oklch(54.1% 0.192 31.0)",
+        "tonalRamp": [
+          "oklch(15.0% 0.061 31.0)",
+          "oklch(26.0% 0.102 31.0)",
+          "oklch(38.0% 0.148 31.0)",
+          "oklch(49.0% 0.191 31.0)",
+          "oklch(61.0% 0.192 31.0)",
+          "oklch(72.0% 0.175 31.0)",
+          "oklch(84.0% 0.089 31.0)",
+          "oklch(95.0% 0.025 31.0)"
+        ]
+      },
+      "accent-ink": {
+        "role": "primary",
+        "displayName": "Tinta sobre rojo",
+        "canonical": "#FFFFFF",
+        "oklch": "oklch(100.0% 0.000 0)",
+        "tonalRamp": [
+          "oklch(15.0% 0.000 0)",
+          "oklch(26.0% 0.000 0)",
+          "oklch(38.0% 0.000 0)",
+          "oklch(49.0% 0.000 0)",
+          "oklch(61.0% 0.000 0)",
+          "oklch(72.0% 0.000 0)",
+          "oklch(84.0% 0.000 0)",
+          "oklch(95.0% 0.000 0)"
+        ]
+      },
+      "live": {
+        "role": "tertiary",
+        "displayName": "Verde de disponible",
+        "canonical": "#12703F",
+        "oklch": "oklch(48.1% 0.114 154.2)",
+        "tonalRamp": [
+          "oklch(15.0% 0.039 154.2)",
+          "oklch(26.0% 0.066 154.2)",
+          "oklch(38.0% 0.096 154.2)",
+          "oklch(49.0% 0.114 154.2)",
+          "oklch(61.0% 0.114 154.2)",
+          "oklch(72.0% 0.114 154.2)",
+          "oklch(84.0% 0.114 154.2)",
+          "oklch(95.0% 0.080 154.2)"
+        ]
+      },
+      "focus": {
+        "role": "primary",
+        "displayName": "Anillo de foco",
+        "canonical": "#C62D19",
+        "oklch": "oklch(54.1% 0.192 31.0)",
+        "tonalRamp": [
+          "oklch(15.0% 0.061 31.0)",
+          "oklch(26.0% 0.102 31.0)",
+          "oklch(38.0% 0.148 31.0)",
+          "oklch(49.0% 0.191 31.0)",
+          "oklch(61.0% 0.192 31.0)",
+          "oklch(72.0% 0.175 31.0)",
+          "oklch(84.0% 0.089 31.0)",
+          "oklch(95.0% 0.025 31.0)"
+        ]
+      },
+      "selection": {
+        "role": "primary",
+        "displayName": "Selección",
+        "canonical": "rgb(198 45 25 / 0.15)",
+        "oklch": "oklch(54.1% 0.192 31.0)",
+        "tonalRamp": [
+          "oklch(15.0% 0.061 31.0)",
+          "oklch(26.0% 0.102 31.0)",
+          "oklch(38.0% 0.148 31.0)",
+          "oklch(49.0% 0.191 31.0)",
+          "oklch(61.0% 0.192 31.0)",
+          "oklch(72.0% 0.175 31.0)",
+          "oklch(84.0% 0.089 31.0)",
+          "oklch(95.0% 0.025 31.0)"
+        ]
+      },
+      "paper-dark": {
+        "role": "neutral",
+        "displayName": "Pizarra fría",
+        "canonical": "#0E0F11",
+        "oklch": "oklch(16.8% 0.004 264.4)",
+        "tonalRamp": [
+          "oklch(15.0% 0.004 264.4)",
+          "oklch(26.0% 0.004 264.4)",
+          "oklch(38.0% 0.004 264.4)",
+          "oklch(49.0% 0.004 264.4)",
+          "oklch(61.0% 0.004 264.4)",
+          "oklch(72.0% 0.004 264.4)",
+          "oklch(84.0% 0.004 264.4)",
+          "oklch(95.0% 0.004 264.4)"
+        ]
+      },
+      "paper-2-dark": {
+        "role": "neutral",
+        "displayName": "Papel alterno (oscuro)",
+        "canonical": "#15171A",
+        "oklch": "oklch(20.4% 0.007 258.4)",
+        "tonalRamp": [
+          "oklch(15.0% 0.007 258.4)",
+          "oklch(26.0% 0.007 258.4)",
+          "oklch(38.0% 0.007 258.4)",
+          "oklch(49.0% 0.007 258.4)",
+          "oklch(61.0% 0.007 258.4)",
+          "oklch(72.0% 0.007 258.4)",
+          "oklch(84.0% 0.007 258.4)",
+          "oklch(95.0% 0.007 258.4)"
+        ]
+      },
+      "paper-3-dark": {
+        "role": "neutral",
+        "displayName": "Papel hundido (oscuro)",
+        "canonical": "#1A1D21",
+        "oklch": "oklch(22.9% 0.009 255.6)",
+        "tonalRamp": [
+          "oklch(15.0% 0.009 255.6)",
+          "oklch(26.0% 0.009 255.6)",
+          "oklch(38.0% 0.009 255.6)",
+          "oklch(49.0% 0.009 255.6)",
+          "oklch(61.0% 0.009 255.6)",
+          "oklch(72.0% 0.009 255.6)",
+          "oklch(84.0% 0.009 255.6)",
+          "oklch(95.0% 0.009 255.6)"
+        ]
+      },
+      "ink-dark": {
+        "role": "neutral",
+        "displayName": "Tinta casi negra (oscuro)",
+        "canonical": "#EDEEF0",
+        "oklch": "oklch(94.9% 0.003 264.5)",
+        "tonalRamp": [
+          "oklch(15.0% 0.003 264.5)",
+          "oklch(26.0% 0.003 264.5)",
+          "oklch(38.0% 0.003 264.5)",
+          "oklch(49.0% 0.003 264.5)",
+          "oklch(61.0% 0.003 264.5)",
+          "oklch(72.0% 0.003 264.5)",
+          "oklch(84.0% 0.003 264.5)",
+          "oklch(95.0% 0.003 264.5)"
+        ]
+      },
+      "ink-2-dark": {
+        "role": "neutral",
+        "displayName": "Tinta de prosa (oscuro)",
+        "canonical": "#B0B5BB",
+        "oklch": "oklch(77.1% 0.010 252.8)",
+        "tonalRamp": [
+          "oklch(15.0% 0.010 252.8)",
+          "oklch(26.0% 0.010 252.8)",
+          "oklch(38.0% 0.010 252.8)",
+          "oklch(49.0% 0.010 252.8)",
+          "oklch(61.0% 0.010 252.8)",
+          "oklch(72.0% 0.010 252.8)",
+          "oklch(84.0% 0.010 252.8)",
+          "oklch(95.0% 0.010 252.8)"
+        ]
+      },
+      "ink-3-dark": {
+        "role": "neutral",
+        "displayName": "Tinta de metadato (oscuro)",
+        "canonical": "#868C93",
+        "oklch": "oklch(63.7% 0.013 252.1)",
+        "tonalRamp": [
+          "oklch(15.0% 0.013 252.1)",
+          "oklch(26.0% 0.013 252.1)",
+          "oklch(38.0% 0.013 252.1)",
+          "oklch(49.0% 0.013 252.1)",
+          "oklch(61.0% 0.013 252.1)",
+          "oklch(72.0% 0.013 252.1)",
+          "oklch(84.0% 0.013 252.1)",
+          "oklch(95.0% 0.013 252.1)"
+        ]
+      },
+      "rule-dark": {
+        "role": "neutral",
+        "displayName": "Regla de fila (oscuro)",
+        "canonical": "#383D44",
+        "oklch": "oklch(35.8% 0.014 256.8)",
+        "tonalRamp": [
+          "oklch(15.0% 0.014 256.8)",
+          "oklch(26.0% 0.014 256.8)",
+          "oklch(38.0% 0.014 256.8)",
+          "oklch(49.0% 0.014 256.8)",
+          "oklch(61.0% 0.014 256.8)",
+          "oklch(72.0% 0.014 256.8)",
+          "oklch(84.0% 0.014 256.8)",
+          "oklch(95.0% 0.014 256.8)"
+        ]
+      },
+      "rule-strong-dark": {
+        "role": "neutral",
+        "displayName": "Regla de corte (oscuro)",
+        "canonical": "#4E545C",
+        "oklch": "oklch(44.3% 0.015 255.6)",
+        "tonalRamp": [
+          "oklch(15.0% 0.015 255.6)",
+          "oklch(26.0% 0.015 255.6)",
+          "oklch(38.0% 0.015 255.6)",
+          "oklch(49.0% 0.015 255.6)",
+          "oklch(61.0% 0.015 255.6)",
+          "oklch(72.0% 0.015 255.6)",
+          "oklch(84.0% 0.015 255.6)",
+          "oklch(95.0% 0.015 255.6)"
+        ]
+      },
+      "accent-dark": {
+        "role": "primary",
+        "displayName": "Rojo de registro (oscuro)",
+        "canonical": "#FF6A50",
+        "oklch": "oklch(70.6% 0.187 32.0)",
+        "tonalRamp": [
+          "oklch(15.0% 0.060 32.0)",
+          "oklch(26.0% 0.099 32.0)",
+          "oklch(38.0% 0.145 32.0)",
+          "oklch(49.0% 0.186 32.0)",
+          "oklch(61.0% 0.187 32.0)",
+          "oklch(72.0% 0.176 32.0)",
+          "oklch(84.0% 0.089 32.0)",
+          "oklch(95.0% 0.025 32.0)"
+        ]
+      },
+      "accent-ink-dark": {
+        "role": "primary",
+        "displayName": "Tinta sobre rojo (oscuro)",
+        "canonical": "#0E0F11",
+        "oklch": "oklch(16.8% 0.004 264.4)",
+        "tonalRamp": [
+          "oklch(15.0% 0.004 264.4)",
+          "oklch(26.0% 0.004 264.4)",
+          "oklch(38.0% 0.004 264.4)",
+          "oklch(49.0% 0.004 264.4)",
+          "oklch(61.0% 0.004 264.4)",
+          "oklch(72.0% 0.004 264.4)",
+          "oklch(84.0% 0.004 264.4)",
+          "oklch(95.0% 0.004 264.4)"
+        ]
+      },
+      "live-dark": {
+        "role": "tertiary",
+        "displayName": "Verde de disponible (oscuro)",
+        "canonical": "#4ADE80",
+        "oklch": "oklch(80.0% 0.182 151.7)",
+        "tonalRamp": [
+          "oklch(15.0% 0.041 151.7)",
+          "oklch(26.0% 0.069 151.7)",
+          "oklch(38.0% 0.101 151.7)",
+          "oklch(49.0% 0.130 151.7)",
+          "oklch(61.0% 0.162 151.7)",
+          "oklch(72.0% 0.182 151.7)",
+          "oklch(84.0% 0.182 151.7)",
+          "oklch(95.0% 0.082 151.7)"
+        ]
+      },
+      "focus-dark": {
+        "role": "primary",
+        "displayName": "Anillo de foco (oscuro)",
+        "canonical": "#FF6A50",
+        "oklch": "oklch(70.6% 0.187 32.0)",
+        "tonalRamp": [
+          "oklch(15.0% 0.060 32.0)",
+          "oklch(26.0% 0.099 32.0)",
+          "oklch(38.0% 0.145 32.0)",
+          "oklch(49.0% 0.186 32.0)",
+          "oklch(61.0% 0.187 32.0)",
+          "oklch(72.0% 0.176 32.0)",
+          "oklch(84.0% 0.089 32.0)",
+          "oklch(95.0% 0.025 32.0)"
+        ]
+      },
+      "selection-dark": {
+        "role": "primary",
+        "displayName": "Selección (oscuro)",
+        "canonical": "rgb(255 106 80 / 0.24)",
+        "oklch": "oklch(70.6% 0.187 32.0)",
+        "tonalRamp": [
+          "oklch(15.0% 0.060 32.0)",
+          "oklch(26.0% 0.099 32.0)",
+          "oklch(38.0% 0.145 32.0)",
+          "oklch(49.0% 0.186 32.0)",
+          "oklch(61.0% 0.187 32.0)",
+          "oklch(72.0% 0.176 32.0)",
+          "oklch(84.0% 0.089 32.0)",
+          "oklch(95.0% 0.025 32.0)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Sólo el titular de la declaración."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Título del proyecto destacado; el empleador en Experiencia."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Título de cada proyecto."
+      },
+      "lead": {
+        "displayName": "Lead",
+        "purpose": "Párrafo bajo el titular y cierre de Contacto."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Valores de fila, leads de proyecto y puntos destacados."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Etiquetas de fila y cabecera de tablas de medición, en mayúsculas."
+      },
+      "section-label": {
+        "displayName": "Section label",
+        "purpose": "Título de cada sección sobre su regla de 2 px, en mayúsculas."
+      },
+      "meta": {
+        "displayName": "Meta",
+        "purpose": "Fechas, chips de stack y metadatos de sección."
+      },
+      "caption": {
+        "displayName": "Caption",
+        "purpose": "Epígrafes de código y de medición, copyright."
+      }
+    },
+    "shadows": [],
+    "motion": [
+      {
+        "name": "ease-out-expo",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "La única curva del sistema: cambios de estado de botones, links y navegación."
+      },
+      {
+        "name": "state",
+        "value": "0.15s",
+        "purpose": "Duración de todo cambio de estado."
+      },
+      {
+        "name": "trail-in",
+        "value": "opacity 0.1s linear, transform 0.14s cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Entrada de la marca roja del rastro al pasar por una fila."
+      },
+      {
+        "name": "trail-out",
+        "value": "opacity 0.42s ease-in, transform 0s linear 0.42s",
+        "purpose": "Salida del rastro: se apaga a altura completa, sin encogerse."
+      },
+      {
+        "name": "stamp",
+        "value": "background-color 0.16s ease-in, color 0.16s ease-in",
+        "purpose": "Salida del sello del número de registro; entra en 0.1s."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "md",
+        "value": "48rem",
+        "purpose": "La fila pasa de pila a tabla de dos columnas; aparece el rol en la cabecera."
+      },
+      {
+        "name": "lg",
+        "value": "60rem",
+        "purpose": "La navegación entra en la fila del nombre; la columna de etiqueta pasa a 13rem."
+      },
+      {
+        "name": "fine-pointer",
+        "value": "(hover: hover) and (pointer: fine)",
+        "purpose": "Rastro del puntero y sello del número de registro."
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Botón primario",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "La acción de escribir por email. Aparece en la declaración y en el cierre, y en ningún otro lado.",
+      "html": "<a class=\"ds-btn-primary\" href=\"#\">Escribime</a>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; min-height: 2.875rem; padding: 0 1.375rem; background: var(--accent); color: var(--accent-ink); font-family: 'Schibsted Grotesk', ui-sans-serif, system-ui, sans-serif; font-size: 0.9375rem; font-weight: 700; text-decoration: none; border: 1px solid transparent; border-radius: 0; transition: background-color 0.15s cubic-bezier(0.16, 1, 0.3, 1); } .ds-btn-primary:hover { background: var(--ink); } .ds-btn-primary:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }"
+    },
+    {
+      "name": "Botón fantasma",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "La descarga del CV: borde de tinta, sin fondo; se hunde a papel-3 al pasar.",
+      "html": "<a class=\"ds-btn-ghost\" href=\"#\">Descargar CV</a>",
+      "css": ".ds-btn-ghost { display: inline-flex; align-items: center; justify-content: center; min-height: 2.875rem; padding: 0 1.375rem; background: transparent; color: var(--ink); font-family: 'Schibsted Grotesk', ui-sans-serif, system-ui, sans-serif; font-size: 0.9375rem; font-weight: 500; text-decoration: none; border: 1px solid var(--ink); border-radius: 0; transition: background-color 0.15s cubic-bezier(0.16, 1, 0.3, 1); } .ds-btn-ghost:hover { background: var(--paper-3); } .ds-btn-ghost:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }"
+    },
+    {
+      "name": "Fila etiqueta/valor",
+      "kind": "custom",
+      "refersTo": "row-label",
+      "description": "La unidad del sitio. Etiqueta mono en ink-3, valor en ink-2, regla de fila debajo; al pasar, la etiqueta sube a ink y aparece la marca roja al margen.",
+      "html": "<dl class=\"ds-rows\"><div class=\"ds-row\"><dt>El problema</dt><dd>Sin API key, NVD permite 5 requests cada 30 segundos, y con ~100 clientes la cuota se agota de inmediato.</dd></div><div class=\"ds-row is-key\"><dt>Qué hice</dt><dd>Un mirror con passthrough que resuelve 29 parámetros localmente y delega los cinco que no.</dd></div></dl>",
+      "css": ".ds-rows { margin: 0; padding: 0 0 0 0.75rem; font-family: 'Schibsted Grotesk', ui-sans-serif, system-ui, sans-serif; } .ds-row { position: relative; display: grid; grid-template-columns: 11rem minmax(0, 1fr); gap: 1.5rem; padding: 0.875rem 0; border-bottom: 1px solid var(--rule); } .ds-row:last-child { border-bottom: 0; } .ds-row dt { padding-top: 0.1875rem; font-family: 'IBM Plex Mono', ui-monospace, Menlo, Consolas, monospace; font-size: 0.6875rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); transition: color 0.42s ease-in; } .ds-row dd { margin: 0; font-size: 0.9375rem; line-height: 1.6; color: var(--ink-2); } .ds-row.is-key dd { color: var(--ink); } .ds-row::before { content: ''; position: absolute; left: -0.75rem; top: 0; bottom: 0; width: 2px; background: var(--accent); opacity: 0; transform: scaleY(0); transform-origin: 50% 0; transition: opacity 0.42s ease-in, transform 0s linear 0.42s; } .ds-row:hover::before, .ds-row:focus-within::before { opacity: 1; transform: scaleY(1); transition: opacity 0.1s linear, transform 0.14s cubic-bezier(0.16, 1, 0.3, 1); } .ds-row:hover dt, .ds-row:focus-within dt { color: var(--ink); transition-duration: 0.1s; }"
+    },
+    {
+      "name": "Cabecera de registro",
+      "kind": "custom",
+      "refersTo": "row-label",
+      "description": "El título de cada sección en mono mayúscula sobre una regla de 2 px en tinta, con un metadato opcional a la derecha.",
+      "html": "<div class=\"ds-rec-head\"><h2>Trabajo</h2><p>Siete sistemas. Qué resolvían, qué decidí y con qué está hecho.</p></div>",
+      "css": ".ds-rec-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 0.25rem 1.5rem; padding-bottom: 0.625rem; border-bottom: 2px solid var(--ink); } .ds-rec-head h2 { margin: 0; font-family: 'IBM Plex Mono', ui-monospace, Menlo, Consolas, monospace; font-size: 0.6875rem; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink); } .ds-rec-head p { margin: 0; max-width: 52ch; font-family: 'IBM Plex Mono', ui-monospace, Menlo, Consolas, monospace; font-size: 0.6875rem; color: var(--ink-3); }"
+    },
+    {
+      "name": "Cabecera de proyecto",
+      "kind": "custom",
+      "refersTo": "register-number",
+      "description": "Número de registro rojo, título y contexto con fecha. Al pasar por el proyecto, el número se sella en rojo.",
+      "html": "<article class=\"ds-project\" tabindex=\"0\"><span class=\"ds-project-n\">03</span><div class=\"ds-project-title\"><h3>NEONDUEL: shooter 1 contra 1 con servidor autoritativo</h3><p><span>Proyecto propio</span><time datetime=\"2026-08\">en producción</time></p></div></article>",
+      "css": ".ds-project { display: grid; grid-template-columns: 2.25rem minmax(0, 1fr); gap: 0.5rem; font-family: 'Schibsted Grotesk', ui-sans-serif, system-ui, sans-serif; outline: none; } .ds-project-n { justify-self: start; align-self: start; margin-left: -0.375rem; padding: 0.3125rem 0.375rem 0.1875rem; font-family: 'IBM Plex Mono', ui-monospace, Menlo, Consolas, monospace; font-size: 0.75rem; color: var(--accent); transition: background-color 0.16s ease-in, color 0.16s ease-in; } .ds-project:hover .ds-project-n, .ds-project:focus-visible .ds-project-n { background: var(--accent); color: var(--accent-ink); transition-duration: 0.1s; } .ds-project-title { display: flex; flex-direction: column; gap: 0.25rem; min-width: 0; } .ds-project h3 { margin: 0; font-size: clamp(1.125rem, 1.02rem + 0.5vw, 1.4375rem); font-weight: 700; line-height: 1.26; letter-spacing: -0.02em; color: var(--ink); } .ds-project p { display: flex; flex-wrap: wrap; gap: 0 0.75rem; margin: 0; font-size: 0.6875rem; color: var(--ink-3); } .ds-project time { font-family: 'IBM Plex Mono', ui-monospace, Menlo, Consolas, monospace; }"
+    },
+    {
+      "name": "Chips de stack",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "Un dato, no un botón: mono chica sobre papel hundido, sin borde ni radio ni hover.",
+      "html": "<span class=\"ds-stack\"><span class=\"ds-chip\">TypeScript</span><span class=\"ds-chip\">Node.js</span><span class=\"ds-chip\">WebSocket</span><span class=\"ds-chip\">three.js</span></span>",
+      "css": ".ds-stack { display: flex; flex-wrap: wrap; gap: 0.3125rem; } .ds-chip { padding: 0.1875rem 0.5rem; background: var(--paper-3); color: var(--ink-2); font-family: 'IBM Plex Mono', ui-monospace, Menlo, Consolas, monospace; font-size: 0.6875rem; white-space: nowrap; border-radius: 0; }"
+    },
+    {
+      "name": "Tabla de medición",
+      "kind": "custom",
+      "refersTo": "row-value",
+      "description": "El antes/después medido de un proyecto: cifras mono tabulares a la derecha, el ahora en tinta, epígrafe que dice cómo se midió.",
+      "html": "<table class=\"ds-measure\"><caption>Instantáneas diferenciales, antes y después. Medido contra el servidor real.</caption><thead><tr><th scope=\"col\"><span class=\"ds-sr\">Métrica</span></th><th scope=\"col\">Antes</th><th scope=\"col\">Ahora</th></tr></thead><tbody><tr><th scope=\"row\">Por instantánea</th><td>579&nbsp;bytes</td><td>188&nbsp;bytes</td></tr><tr><th scope=\"row\">Tráfico del servidor</th><td>36,2&nbsp;KB/s</td><td>11,7&nbsp;KB/s</td></tr></tbody></table>",
+      "css": ".ds-measure { width: 100%; max-width: 32rem; border-collapse: collapse; font-family: 'Schibsted Grotesk', ui-sans-serif, system-ui, sans-serif; font-variant-numeric: tabular-nums; } .ds-measure caption { caption-side: bottom; margin-top: 0.5rem; text-align: left; font-family: 'IBM Plex Mono', ui-monospace, Menlo, Consolas, monospace; font-size: 0.625rem; color: var(--ink-3); } .ds-measure th, .ds-measure td { padding: 0.5625rem 0; font-weight: 400; text-align: left; vertical-align: baseline; } .ds-measure thead th { padding-top: 0; font-family: 'IBM Plex Mono', ui-monospace, Menlo, Consolas, monospace; font-size: 0.6875rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); border-bottom: 1px solid var(--ink); } .ds-measure tbody tr { border-bottom: 1px solid var(--rule); } .ds-measure tbody th { padding-right: 1rem; font-size: 0.9375rem; color: var(--ink-2); } .ds-measure td, .ds-measure thead th + th { padding-left: 1rem; text-align: right; white-space: nowrap; } .ds-measure td { font-family: 'IBM Plex Mono', ui-monospace, Menlo, Consolas, monospace; font-size: 0.8125rem; color: var(--ink-3); } .ds-measure td:last-child { color: var(--ink); font-weight: 500; } .ds-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }"
+    },
+    {
+      "name": "Bloque de código",
+      "kind": "custom",
+      "refersTo": "code-block",
+      "description": "La prueba de primera mano de un proyecto, con su epígrafe: papel hundido, filo rojo de 3 px, resaltado con los colores del sistema.",
+      "html": "<figure class=\"ds-code\"><pre><code><span class=\"k\">def</span> <span class=\"f\">build_tools</span>(plan):\n    schema = live_openapi_schema()   <span class=\"c\"># drf-spectacular, en caliente</span>\n    <span class=\"k\">for</span> operation <span class=\"k\">in</span> walk(schema):\n        <span class=\"k\">yield</span> tool_from(operation)</code></pre><figcaption>Cómo se derivan las herramientas, simplificado</figcaption></figure>",
+      "css": ".ds-code { margin: 0; font-family: 'IBM Plex Mono', ui-monospace, Menlo, Consolas, monospace; } .ds-code pre { margin: 0; padding: 0.9375rem 1rem; background: var(--paper-3); border-left: 3px solid var(--accent); overflow-x: auto; font-size: 0.75rem; line-height: 1.7; color: var(--ink-2); } .ds-code code { font-family: inherit; } .ds-code .k { color: var(--accent); } .ds-code .f { color: var(--ink); font-weight: 500; } .ds-code .c { color: var(--ink-3); } .ds-code figcaption { margin-top: 0.5rem; font-size: 0.625rem; color: var(--ink-3); }"
+    },
+    {
+      "name": "Navegación",
+      "kind": "nav",
+      "refersTo": "nav-link",
+      "description": "Links de texto en tinta de prosa, sin subrayado; rojo al pasar. En el teléfono, fila propia con scroll lateral.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"Secciones\"><a href=\"#\">Trabajo</a><a href=\"#\">Experiencia</a><a href=\"#\">Habilidades</a><a href=\"#\">Contacto</a></nav>",
+      "css": ".ds-nav { display: flex; gap: 1.5rem; font-family: 'Schibsted Grotesk', ui-sans-serif, system-ui, sans-serif; } .ds-nav a { display: inline-flex; align-items: center; min-height: 2.75rem; font-size: 0.875rem; color: var(--ink-2); text-decoration: none; white-space: nowrap; transition: color 0.15s cubic-bezier(0.16, 1, 0.3, 1); } .ds-nav a:hover { color: var(--accent); } .ds-nav a:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }"
+    },
+    {
+      "name": "Link externo",
+      "kind": "custom",
+      "refersTo": "link",
+      "description": "Todo link de contenido: rojo, subrayado fino con 3 px de separación, flecha dibujada cuando sale del sitio.",
+      "html": "<a class=\"ds-ext\" href=\"#\">Jugar a NEONDUEL<svg width=\"13\" height=\"13\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 16 16 8M9.5 8H16v6.5\"/></svg></a>",
+      "css": ".ds-ext { display: inline-flex; align-items: center; gap: 0.375rem; font-family: 'Schibsted Grotesk', ui-sans-serif, system-ui, sans-serif; font-size: 0.875rem; color: var(--accent); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; } .ds-ext:hover { text-decoration-thickness: 2px; } .ds-ext:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; } .ds-ext svg { flex: none; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "La Ficha Técnica",
+    "overview": "La página es una hoja de especificación impresa. Abre con una keyline roja en el filo superior, una cabecera con el nombre, y un bloque de filas (qué busca, email, ubicación) antes de la declaración. Después, casi todo el contenido es una fila de definición: una etiqueta a la izquierda y un valor a la derecha, separadas por una regla fina. Esa gramática es la que la vuelve escaneable en 90 segundos para quien filtra y legible con tiempo para quien evalúa.\n\nEl tono es sobrio, preciso y verificable. La precisión hace de ornamento: las cifras van en mono tabular, las fechas son `<time>` de verdad, cada dato provisorio se declara en vez de disimularse, y la única decoración es una marca de registro roja que señala dónde está lo importante. Los componentes son piezas de documento, no widgets. La profundidad es plana: la jerarquía la dan el peso de las reglas y tres tonos de papel, nunca una sombra.\n\nEl tema oscuro es la misma hoja en pizarra fría, no un dark cálido: el sitio tiene que leerse como documento impreso en los dos temas.",
+    "keyCharacteristics": [
+      "Blanco de papel, tinta casi negra y un único rojo de registro; en oscuro, pizarra fría.",
+      "La fila etiqueta/valor como unidad de toda la página.",
+      "Schibsted Grotesk para leer, IBM Plex Mono para etiquetar y medir.",
+      "Plana: reglas de 1, 2 y 4 px y tres tonos de papel. Ni una sombra.",
+      "Esquinas rectas; la única curva del sistema es el punto de \"disponible\".",
+      "El contraste se mide en el build, en los dos temas, antes de publicar."
+    ],
+    "rules": [
+      {
+        "name": "La regla del rojo de registro",
+        "body": "El rojo marca, no pinta. Aparece como filo, como signo (número, viñeta, marca, foco) y como link. Superficie roja sólo en el botón primario, el salto al contenido y el sello del número.",
+        "section": "colors"
+      },
+      {
+        "name": "La regla del contraste medido",
+        "body": "Ningún color entra al CSS sin pasar por `site/tokens.mjs`, y todo par de texto se declara en `checks`. El build falla por debajo de 4.5:1 en texto y 3:1 en el anillo de foco, en los dos temas; las reglas tienen piso propio (1.7:1 la de fila, 2.4:1 la de corte). Ningún hex suelto en `styles.css`.",
+        "section": "colors"
+      },
+      {
+        "name": "La regla de las tres tintas",
+        "body": "La jerarquía del texto se hace con `ink` (lo que hay que ver), `ink-2` (lo que se lee) e `ink-3` (lo que describe), no con tamaños nuevos.",
+        "section": "colors"
+      },
+      {
+        "name": "La regla de la mono como etiqueta",
+        "body": "IBM Plex Mono sólo para etiquetas, metadatos, cifras y código. Todo lo que se lee como prosa va en Schibsted. Cuando la etiqueta de una fila es un nombre propio (una institución, un cliente) deja de ser un campo: sale de la mono y pasa a Schibsted 700 a 0.9375rem en `ink`.",
+        "section": "typography"
+      },
+      {
+        "name": "La regla del piso",
+        "body": "Nada baja de 0.625rem, y ese tamaño es sólo mono: epígrafes, copyright y el subtítulo de Trabajo de equipo. Las etiquetas de fila no bajan de 0.6875rem.",
+        "section": "typography"
+      },
+      {
+        "name": "La regla de la fila",
+        "body": "Todo dato nuevo entra como fila etiqueta/valor. Si no se puede escribir como etiqueta y valor, todavía no está entendido.",
+        "section": "layout"
+      },
+      {
+        "name": "La regla de las reglas",
+        "body": "Si algo necesita separarse, se le da una regla del peso que corresponde; si necesita agruparse, un papel. Nunca una sombra.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Usá** la fila etiqueta/valor para todo dato nuevo, con la etiqueta en label mono y el valor en body.",
+      "**Sacá** cada color de `site/tokens.mjs` y declará su par de contraste en `checks`, en los dos temas.",
+      "**Reservá** la mono para etiquetas, metadatos, cifras y código; cuando la etiqueta es un nombre propio, pasala a Schibsted 700.",
+      "**Dale** a cada proyecto como mucho un artefacto de prueba (un bloque de código o una tabla de medición), siempre con su epígrafe.",
+      "**Mantené** las esquinas rectas (radio 0): la única curva del sistema es el punto de \"disponible\".",
+      "**Separá** con reglas del peso que corresponde (1, 2 o 4 px) y agrupá con papel (`paper-2`, `paper-3`).",
+      "**Animá** sólo cambios de estado, en 0.15s con `cubic-bezier(0.16, 1, 0.3, 1)`; los efectos de puntero, detrás de `(hover: hover) and (pointer: fine)` y repetidos en `:focus-within`; y todo se apaga con `prefers-reduced-motion`."
+    ],
+    "donts": [
+      "**No agregues sombras.** La profundidad es plana: reglas y papeles.",
+      "**No muestres habilidades con barras, porcentajes ni nubes de logos.**",
+      "**No uses imágenes ni ilustraciones decorativas.** La prueba es el dato, el código o el link en vivo.",
+      "**No escribas hex sueltos en el CSS ni atributos `style=\"\"` en el markup:** el primero se saltea el chequeo de contraste y el segundo rompe la CSP con hash.",
+      "**No calientes el oscuro.** Es pizarra fría; un oscuro marrón volvería la hoja otra cosa."
+    ]
+  }
+}
