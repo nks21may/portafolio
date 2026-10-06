@@ -59,7 +59,7 @@ assets/og/          las dos tarjetas de Open Graph, ya renderizadas
 assets/fonts/       los woff2 self-hosted (los baja el build la primera vez)
 scripts/            generadores puntuales (páginas de OG) y el chequeo del build
 dist/               el sitio publicable (no se versiona: lo hace el build)
-deploy/nginx.conf   la config del servidor, generada
+deploy/nginx.conf   la config del nginx de la imagen, generada
 ```
 
 ### Decisiones que conviene no deshacer sin querer
@@ -90,66 +90,47 @@ deploy/nginx.conf   la config del servidor, generada
 
 ## Desplegar
 
-**En el servidor**, desde el clon del repo:
+Con un push a `main`. La CI (`.github/workflows/publish.yml`) construye la
+imagen y la publica en GHCR como `ghcr.io/nks21may/portafolio`. La VPS la baja
+sola con su timer de deploy, y si la nueva no queda healthy vuelve a la
+anterior. Qué corre ahí, y cómo, se decide en el repo infra.
+
+La imagen se arma en dos etapas (`Dockerfile`). Primero `node build.mjs` y
+`node scripts/check.mjs`: si el build o el verificador fallan, el build de la
+imagen falla y no se publica nada. Después, un nginx sin root
+(`nginx-unprivileged`, en el 8080) con `dist/` y el `nginx.conf` generado.
+
+Para probar la imagen en local:
 
 ```bash
-git pull && sh deploy.sh
-```
-
-Construye, corre el verificador, publica `dist/` en `/var/www/<dominio>` e
-instala el `nginx.conf` generado. Si el build o el check fallan, no toca nada.
-
-Pide `sudo` sólo para escribir en `/var/www` y `/etc/nginx` y para recargar.
-El build corre con tu usuario a propósito: con `sudo` dejaría `dist/` y
-`assets/fonts/` como root adentro del repo, y el próximo `git pull` o el
-próximo build sin `sudo` fallarían por permisos.
-
-El contenido se copia al lado y recién ahí se cambia de lugar: el `mv` de un
-directorio dentro del mismo filesystem es atómico, así que nadie ve el sitio a
-medio copiar y el anterior queda entero en `/var/www/<dominio>.anterior`. El
-vhost se guarda con fecha antes de pisarlo, y si `nginx -t` rechaza la
-configuración nueva se restaura la anterior **sin recargar** — un conf malo no
-llega a estar activo. Al final comprueba cinco rutas contra `127.0.0.1`, que es
-por donde entra el túnel, y si alguna falla imprime los comandos para volver
-atrás.
-
-Hace falta `node` en el servidor: `dist/` no se versiona, el HTML se genera ahí.
-
-Configurable por entorno: `DOMINIO=otro.dev sh deploy.sh`.
-
-A mano, si hiciera falta:
-
-```bash
-node build.mjs && node scripts/check.mjs
-sudo cp -a dist/. /var/www/nicolasdalessandro.dev/
-sudo cp deploy/nginx.conf /etc/nginx/sites-available/nicolasdalessandro.dev
-sudo ln -s /etc/nginx/sites-available/nicolasdalessandro.dev /etc/nginx/sites-enabled/
-sudo nginx -t && sudo systemctl reload nginx
+docker build -t portafolio . && docker run --rm -p 127.0.0.1:8080:8080 portafolio
+curl -sI -H 'Host: nicolasdalessandro.dev' http://127.0.0.1:8080/
 ```
 
 El `nginx.conf` se **genera** en cada build porque la CSP lleva los hashes del
 CSS y del JS. Editarlo a mano lo desincroniza en el primer cambio de estilo y
 rompe la página en producción, no en desarrollo.
 
+Antes había un `deploy.sh` que construía en la VPS y publicaba en el nginx del
+host. Desde que el sitio es un contenedor (repo infra, I22), ese camino no
+existe.
+
 ### Va detrás de Cloudflare Tunnel
 
-El VPS no expone puertos: `cloudflared` entra por `http://127.0.0.1:80` y el
-TLS lo termina Cloudflare en su borde. De ahí tres cosas que el conf generado
-resuelve y que conviene no "arreglar" de vuelta:
+El VPS no expone puertos: `cloudflared`, en el host, entra por el puerto de
+loopback que le asigna el repo infra, que el contenedor publica sólo en
+`127.0.0.1`. El TLS lo termina Cloudflare en su borde. De ahí tres cosas que el
+conf generado resuelve y que conviene no "arreglar" de vuelta:
 
 - **Nada de 443 ni de certbot.** El origen no ve una conexión TLS nunca, y
   certbot no podría validar por HTTP-01 con los puertos cerrados.
-- **Ningún redirect de 80 a https de este mismo host.** Ese 301 vuelve al
-  borde, que vuelve a entrar por el túnel al puerto 80: bucle, y el navegador
-  lo corta con `ERR_TOO_MANY_REDIRECTS`. El redirect de `www` al apex sí es
-  seguro, porque cambia de host.
+- **Ningún redirect de http a https de este mismo host.** Ese 301 vuelve al
+  borde, que vuelve a entrar por el túnel: bucle, y el navegador lo corta con
+  `ERR_TOO_MANY_REDIRECTS`. El redirect de `www` al apex sí es seguro, porque
+  cambia de host.
 - **`absolute_redirect off`.** Si no, nginx completa cada `Location` con
   `$scheme`, que acá vale `http`, y manda de vuelta al borde por un salto de
   más — sin "Always Use HTTPS", directamente deja al visitante en http.
-- **`listen 127.0.0.1:80`**, no `listen 80`. El único que tiene que llegar es
-  cloudflared. Ojo si algún día agregás otro vhost: mezclar `listen 80` con
-  `listen 127.0.0.1:80` hace que nginx intente bindear `0.0.0.0:80` y
-  `127.0.0.1:80` a la vez y no arranque. Todos en loopback, o ninguno.
 
 ### Cloudflare reescribe el HTML, y la CSP tiene que saberlo
 

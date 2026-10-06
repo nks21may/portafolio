@@ -1,0 +1,10 @@
+# Lo que el build genera, o no necesita para generarse.
+.git
+.github
+.claude
+.impeccable
+node_modules
+dist
+*.md
+Dockerfile
+.dockerignore
