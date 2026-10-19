@@ -142,9 +142,9 @@ export const projects = [
     id: 'neonduel',
     featured: false,
     period: { start: '2026-08', end: null },
-    // Publicado en un subdominio propio, pero con el repo privado: por eso
-    // lleva `url` y no `repo`, que llevaría a un 404.
+    // Se juega en su subdominio y el repo es público: lleva los dos links.
     url: 'https://neonduel.nicolasdalessandro.dev/',
+    repo: 'https://github.com/nks21may/1vs1',
     stack: ['TypeScript', 'Node.js', 'WebSocket', 'three.js', 'Vite', 'Vitest', 'Docker'],
     // Antes y después de las instantáneas diferenciales, medido contra el
     // servidor real. Las cifras viven acá y no en el copy para que los dos
@@ -182,7 +182,8 @@ export const projects = [
     id: 'surf-bhop',
     featured: false,
     period: { start: '2026-09', end: null },
-    // Igual que NEONDUEL: se juega en su subdominio, el repo es privado.
+    // Se juega en su subdominio, pero el repo es privado: lleva `url` y no
+    // `repo`, que llevaría a un 404.
     url: 'https://surf.nicolasdalessandro.dev/',
     stack: [
       'TypeScript',
@@ -200,8 +201,9 @@ export const projects = [
     id: 'museo',
     featured: false,
     period: { start: '2026-09', end: null },
-    // Como los juegos: se visita en su subdominio, el repo es privado.
+    // Como NEONDUEL: se visita en su subdominio y el repo es público.
     url: 'https://museo.nicolasdalessandro.dev/',
+    repo: 'https://github.com/nks21may/museo',
     stack: ['JavaScript', 'WebGL2', 'GLSL ES 3.00', 'HTML-in-Canvas', 'Playwright', 'nginx', 'Docker'],
   },
 ];

@@ -64,9 +64,10 @@ Pendiente, sin decidir:
   - Plataforma SaaS B2B con capa MCP, y el plugin de Claude Code del equipo.
   - Turnero médico con videollamadas.
   - Bot de audio a Discord, en vivo en `audio.nicolasdalessandro.dev`.
-  - NEONDUEL, en vivo en `neonduel.nicolasdalessandro.dev`, con 486 tests y mediciones de tráfico antes y después.
+  - NEONDUEL, en vivo en `neonduel.nicolasdalessandro.dev` y con repo público en `github.com/nks21may/1vs1`: 486 tests y mediciones de tráfico antes y después.
   - Surf & Bhop Daily, en vivo en `surf.nicolasdalessandro.dev`, con 246 tests.
-  - Museo de shaders, en vivo en `museo.nicolasdalessandro.dev`.
+  - Museo de shaders, en vivo en `museo.nicolasdalessandro.dev` y con repo público en `github.com/nks21may/museo`.
+- **El código de este sitio**, público en `github.com/nks21may/portafolio`.
 - **CV en PDF**, uno por idioma: `assets/brand/cv-nicolas-dalessandro-es.pdf` y `-en.pdf`.
 - **Tarjetas de Open Graph** por idioma: `assets/og/`.
 - **Una crítica de diseño previa**: `.impeccable/critique/2026-09-04T14-02-51Z__sites-d-ficha.md`.
@@ -74,10 +75,10 @@ Pendiente, sin decidir:
 Ausencias que no se deben fabricar:
 
 - Testimonios, recomendaciones o métricas de negocio: no hay.
-- Nombres de clientes: los trabajos hechos a través de Pabex aparecen anonimizados ("SaaS B2B", "plataforma de salud digital"). *Inferido del contenido, sin confirmar.*
+- Nombres de clientes: los trabajos hechos a través de Pabex aparecen anonimizados ("SaaS B2B", "plataforma de salud digital"). Confirmado: el nombre del cliente del SaaS no se escribe en ningún lado, tampoco en este repo, que es público.
 - Título universitario: la Licenciatura en Ciencias de la Computación figura con la cursada completa hasta cuarto año, no como terminada.
 - La URL de la credencial de Mercado Pago.
-- Links a GitHub de NEONDUEL, Surf, el museo, el bot y la infra: los repos son privados.
+- Links a GitHub de Surf, el bot y la infra: los repos son privados.
 
 ## Product Principles
 
