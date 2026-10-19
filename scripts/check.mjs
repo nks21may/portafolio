@@ -14,6 +14,7 @@
 import { readFile, access } from 'node:fs/promises';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { NONCE_PLACEHOLDER } from '../lib/head.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const PAGES = [
@@ -140,8 +141,22 @@ if (shapes.length === 2) {
 for (const f of ['sitemap.xml', 'robots.txt', 'site.webmanifest']) {
   if (!(await exists(join(ROOT, 'dist', f)))) fail('dist', `falta ${f}`);
 }
-if (!(await exists(join(ROOT, 'deploy', 'nginx.conf')))) {
+const confPath = join(ROOT, 'deploy', 'nginx.conf');
+if (!(await exists(confPath))) {
   fail('deploy', 'falta nginx.conf');
+} else {
+  /* El nonce del <meta> es un marcador que nginx reemplaza al servir. Si una
+     página lo trae y el conf no lo reemplaza (o al revés), el script de
+     Cloudflare queda bloqueado por una de las dos políticas, en silencio. */
+  const conf = await readFile(confPath, 'utf8');
+  /* En el atributo la comilla sale escapada (&#39;), así que se busca sin ella. */
+  const metaNonce = (await readFile(join(ROOT, 'dist', 'index.html'), 'utf8')).includes(`nonce-${NONCE_PLACEHOLDER}`);
+  const confNonce = conf.includes("'nonce-$request_id'") && conf.includes(`sub_filter '${NONCE_PLACEHOLDER}' '$request_id'`);
+  if (metaNonce !== confNonce) {
+    fail('deploy', metaNonce
+      ? 'el <meta> lleva el marcador del nonce pero nginx.conf no lo reemplaza'
+      : 'nginx.conf manda un nonce que el <meta> no conoce');
+  }
 }
 
 console.log('');

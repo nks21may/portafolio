@@ -68,7 +68,7 @@ export default {
       },
       {
         name: 'Infrastructure',
-        text: 'Linux, Docker and nginx on servers I administer myself, with my own DNS, TLS and deploys.',
+        text: 'Linux, Docker and nginx on servers I run myself, with deploys, secrets, monitoring and backups all described in code.',
       },
       {
         name: 'Applied AI',
@@ -80,7 +80,7 @@ export default {
   sections: {
     trabajo: {
       title: 'Work',
-      intro: 'Seven systems. What each one solved, what I decided, and what it runs on.',
+      intro: 'Eight systems. What each one solved, what I decided, and what it runs on.',
     },
     experiencia: { title: 'Experience' },
     habilidades: { title: 'Skills' },
@@ -115,7 +115,7 @@ export default {
       problem:
         'A B2B platform in production, with an external API that is the contract its clients build against. And on top of that, the tools an agent exposes against that API are written by hand and go stale the moment the API moves.',
       approach:
-        'Two and a half years on that backend: the migration of the API to v2, access control, and product features. Plus a self-adapting MCP server that generates its tools from the live OpenAPI schema: when the API changes, the tools change with it. There are no definitions left to maintain.',
+        'Since 2023 on that backend: the migration of the API to v2, access control, and product features. Plus a self-adapting MCP server that generates its tools from the live OpenAPI schema: when the API changes, the tools change with it. There are no definitions left to maintain.',
       highlights: [
         'A custom authentication middleware using identity and key headers, validated end to end with MCP Inspector.',
         'Custom OpenAPI extensions (<code>x-plan-required</code>), tags and preprocessing hooks, so one codebase emits different documentation per audience and per subscribed plan.',
@@ -124,6 +124,7 @@ export default {
         'Clients rotated resources to dodge their plan limit; a freed slot is now locked for a week.',
         'Integrated an external content-certification service: evidence of a phishing site gets timestamped and signed so it holds up in a legal claim.',
         'I documented the business rules as a structured knowledge base — entities, flows, ADRs and API references — built to be consumed by an agent.',
+        'I built the Claude Code plugin the team works with: ten skills that take a ClickUp task end to end (plan, front and back end in parallel, a review before every push, and the PRs), with each sub-agent’s model picked by its role and how hard its part is.',
       ],
     },
 
@@ -178,25 +179,30 @@ export default {
       approach:
         'Two services under Docker Compose: a WebSocket service that receives WebM/Opus chunks from the browser, and an HTTP service handling Discord OAuth and a metrics endpoint.',
       highlights: [
-        'Deployed on ARM64 on my own VPS, exposed through subdomains behind nginx.',
+        'Runs on ARM64 on my VPS as one more image in the infrastructure repo, and reaches the internet through Cloudflare Tunnel, with no open ports.',
+        'A mutiny: after ten minutes on air, anyone in the room can call a vote to take the mic from whoever will not let go of it. A strict majority wins, with 60 seconds to vote and a cooldown if it fails, and when it passes the bot plays a horn in the channel.',
+        'A <code>/healthz</code> that says whether the bot is still connected to Discord, not just whether the process answers: the container healthcheck reads it, and a deploy does not count a version as good until it passes.',
+        'Closed a reflected XSS on the OAuth success page, since <code>JSON.stringify</code> does not escape <code></script></code>, and capped the demuxer: one WebM block declaring 8 GiB held 312 MiB and stalled for 3 seconds the single event loop that serves every server.',
         'Its own terms of use and privacy policy, because it processes third-party audio.',
       ],
     },
 
     'oracle-infra': {
-      title: 'Personal infrastructure on Oracle Cloud',
+      title: 'Infrastructure as code for my Oracle Cloud VPS',
       context: 'Personal project',
       period: 'ongoing',
-      lead: 'An ARM server with 4 OCPUs and 24 GB of RAM that I run end to end. Everything I publish runs here.',
+      lead: 'An ARM server with 4 OCPUs and 24 GB, out of Oracle’s free tier, where everything I publish runs. Whatever runs there comes from a repo: anything that is not in git is drift, and a tool catches it.',
       problem:
-        'Leaning on a PaaS for every experiment means never learning what happens underneath, and having no room to move when something breaks outside the application.',
+        'The server had grown by hand. When I surveyed it, the automatic deploys of two apps had been failing dozens of times a day for a month without anyone noticing, secrets sat in unencrypted .env files, two apps were built by hand on the VPS, and one published its port on 0.0.0.0, around the firewall.',
       approach:
-        'I stood up and maintain the whole box: nginx serving several sites, services in Docker, a modded game server, my own DNS on Cloudflare, and hardened access.',
+        'One repo as the source of truth: each service’s compose file, secrets encrypted with sops and age, the tunnel, the host in Ansible, and the Oracle and Cloudflare accounts in OpenTofu. Apps only publish their image to GHCR; the VPS pulls main every two minutes, never backwards, and applies whatever changed.',
       highlights: [
-        'nginx as a reverse proxy for several sites and subdomains, with TLS.',
-        'Containerised services under Docker Compose.',
-        'DNS managed on Cloudflare.',
-        'Hardened access and a minimal exposed surface.',
+        'Every deploy records the digest that is running, recreates the container and waits for it to turn healthy. If it does not, it rolls back to the previous one on its own and reports to Discord.',
+        'Apps open no ports: every subdomain comes in through Cloudflare Tunnel, SSH goes through Cloudflare Access, and secrets are decrypted into a tmpfs right before each stack comes up.',
+        'Prometheus, Loki and Grafana, with alerts to Discord. If an alert fails to arrive, or the whole VPS goes down, a dead man’s switch on healthchecks.io sends an email.',
+        'Daily restic backups to Cloudflare R2, on a different provider on purpose: a problem with the Oracle account cannot take the server and the backups down together.',
+        'Zero cost as a rule, with an alert on any spend at all, and new third-party versions only go in after a week out, unless they fix a critical CVE that is already being exploited.',
+        '26 ADRs, a security audit and 377 tests that run in Docker. An agent built it, iterating in TDD on its own branch: I am the one who moves <code>main</code>, and the agent is denied pushing to it.',
       ],
     },
 
@@ -204,17 +210,38 @@ export default {
       title: 'Surf & Bhop Daily: daily races with anti-cheat by re-simulation',
       context: 'Personal project',
       period: 'in production',
-      lead: 'A surf and bunnyhop game with Counter-Strike physics, in the browser. Every day at 00:00 UTC the date generates a new track, the same one for everybody, and the leaderboard ranks by time.',
+      lead: 'A surf and bunnyhop game with Counter-Strike physics, in the browser and as an Activity inside Discord. Every day at 00:00 UTC the date generates a new track, the same one for everybody, and the leaderboard ranks by time.',
       problem:
         'A leaderboard played in the browser cannot take the client’s word for anything: from the console, anyone can report whatever time they like or turn up right at the finish line.',
       approach:
-        'The server never receives times or positions: it receives the inputs, recorded tick by tick. It generates the day’s track from the same seed and runs the race again on the same physics engine the client uses. If the simulation does not reach the finish, or its time does not match the reported one, the run stays off the leaderboard.',
+        'Every run travels with its inputs, recorded tick by tick. The server generates the day’s track from the same seed and runs the race again on the same physics engine the client uses: if the simulation does not reach the finish, or its time does not match the reported one, the run is rejected. A run without a recording still goes in, but as unverified.',
       highlights: [
         'Fixed-step physics at 128 ticks per second, shared by client and server: the re-simulation runs the same code that ran in the browser.',
         'Every track is checked against a geometric invariant as it is generated: no ramp may overlap another. A test sweeps it across 100 seeds.',
-        'Discord login over OAuth2, guarded against CSRF with <code>state</code>, and 120 tests that include impersonation attempts: a guest cannot race under a registered user’s name or overwrite someone else’s record.',
+        'It also runs inside Discord through the Embedded App SDK: the same app notices it is in the Activity’s iframe and signs in with the Discord account, with no second login.',
+        'Live multiplayer over WebSocket: the rest of the room shows up as ghosts with their Discord avatars, with a room scoreboard and a heads-up when a friend finishes.',
+        'An endless mode that chains procedural sections forever, with its own leaderboard and a ghost of your personal best to race alongside.',
+        'A security review found the server accepted an unsigned session as if it came from Discord. Sessions and guests are signed now, and 246 tests include impersonation attempts: a guest cannot race under a registered user’s name or overwrite someone else’s record.',
       ],
       urlLabel: 'Play Surf & Bhop Daily',
+    },
+
+    museo: {
+      title: 'Museo: a TV set of live shaders',
+      context: 'Personal project',
+      period: 'in production',
+      lead: 'A collection of 25 fragment shaders that run live in the browser instead of being recorded. You browse it like a TV: every piece is a channel, with a programme guide and a teletext page holding its notes and its code.',
+      problem:
+        'Tweet-sized shaders are published in twigl’s dialect, which hands out uniforms and functions that GLSL does not have. Outside twigl they do not compile, and a recording loses the very thing that makes them interesting: that they run live.',
+      approach:
+        'Each piece is stored exactly as it was published, and the museum translates it on load: it prepends a prelude with what twigl gave for free, zero-initialises the variables GLSL makes no promises about, and draws it in WebGL2. No build and no dependencies: static files behind a rootless nginx.',
+      highlights: [
+        'The prelude adds extensions of its own: a piece can read a photo, the last click or tap, or the trail of a spark that follows the mouse.',
+        'With HTML-in-Canvas, Chrome’s experimental API, the on-screen display and the teletext are painted inside the canvas through a CRT shader, and they are still HTML: you can select them, a screen reader reads them, and the buttons work. Without the API, the same HTML sits on top of the piece.',
+        '23 of the 25 pieces are my own. Two Claude Code skills build a new piece from twigl code, an idea or a photo, and a Playwright checker opens it in Chrome on the GPU and fails if the shader does not compile or the page throws errors.',
+        'A strict CSP with nothing inline, and a read-only container with no capabilities, listening only on loopback.',
+      ],
+      urlLabel: 'Visit the museum',
     },
   },
 

@@ -29,7 +29,9 @@ cambiar un proyecto.**
 
 - `content/shared.js` — lo que no se traduce: identidad, links, fechas, stacks,
   ids de proyecto, el fragmento de código que ilustra un proyecto, y las
-  banderas de archivos provisorios.
+  banderas de archivos provisorios. Las dos excepciones son las habilidades que
+  no son un nombre propio y los comentarios del fragmento: van como
+  `{ es, en }`, y el build falla si falta un idioma.
 - `content/es.js` y `content/en.js` — el copy de cada idioma. Los ids de
   proyecto, habilidad y cliente tienen que coincidir con `shared.js`; si falta
   uno, el build lo dice con nombre y apellido en vez de renderizar un hueco.
@@ -134,8 +136,8 @@ conf generado resuelve y que conviene no "arreglar" de vuelta:
 
 ### Cloudflare reescribe el HTML, y la CSP tiene que saberlo
 
-Dos funciones del panel modifican la página **después** de que salió de nginx,
-y cada una agrega un script que la CSP bloquearía. Están declaradas en
+Tres funciones de Cloudflare modifican la página **después** de que salió de
+nginx, y cada una agrega un script que la CSP bloquearía. Están declaradas en
 `content/shared.js`, en `cloudflare`, y de ahí salen los orígenes que se suman
 a la política:
 
@@ -143,6 +145,16 @@ a la política:
 |---|---|---|
 | Email Address Obfuscation | `/cdn-cgi/scripts/…/email-decode.min.js` | `script-src https://<dominio>/cdn-cgi/scripts/` |
 | Browser Insights | `static.cloudflareinsights.com/beacon.min.js` | `script-src` ese host + `connect-src https://cloudflareinsights.com` |
+| JavaScript Detections | un script inline, y desde ahí `/cdn-cgi/challenge-platform/…` | un nonce por request + `script-src https://<dominio>/cdn-cgi/challenge-platform/` |
+
+JavaScript Detections no se puede apagar mientras esté Bot Fight Mode, que es
+lo que trae el plan gratis. Su script inline lleva el ray id de cada request,
+así que ningún hash lo cubre: lo que funciona es el nonce, que Cloudflare lee
+del header y copia en el script que inyecta. nginx lo genera con
+`$request_id`, y como el `<meta>` también tiene que conocerlo (el navegador
+aplica las dos políticas), el HTML trae un marcador que un `sub_filter`
+reemplaza por el mismo valor. `serve.mjs` hace lo mismo en local, y
+`scripts/check.mjs` falla si el marcador y el `sub_filter` se separan.
 
 **Ese objeto tiene que reflejar lo que está activo en el panel.** Si apagás una
 allá y no acá, la CSP queda más abierta de lo necesario; al revés, la función

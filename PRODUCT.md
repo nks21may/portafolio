@@ -58,14 +58,15 @@ Pendiente, sin decidir:
 
 ## Evidence on Hand
 
-- **Siete proyectos** en `content/`, con datos verificados contra el código y los servicios:
+- **Ocho proyectos** en `content/`, con datos verificados contra el código y los servicios:
   - Mirror de la CVE API del NVD, con repo público en `github.com/nks21may/cve-proxy`.
-  - Plataforma SaaS B2B con capa MCP.
+  - Infraestructura como código de la VPS de Oracle (repo `infra`, privado): 26 ADRs, una auditoría de seguridad y 377 tests.
+  - Plataforma SaaS B2B con capa MCP, y el plugin de Claude Code del equipo.
   - Turnero médico con videollamadas.
   - Bot de audio a Discord, en vivo en `audio.nicolasdalessandro.dev`.
-  - Infraestructura propia en Oracle Cloud.
   - NEONDUEL, en vivo en `neonduel.nicolasdalessandro.dev`, con 486 tests y mediciones de tráfico antes y después.
-  - Surf & Bhop Daily, en vivo en `surf.nicolasdalessandro.dev`, con 120 tests.
+  - Surf & Bhop Daily, en vivo en `surf.nicolasdalessandro.dev`, con 246 tests.
+  - Museo de shaders, en vivo en `museo.nicolasdalessandro.dev`.
 - **CV en PDF**, uno por idioma: `assets/brand/cv-nicolas-dalessandro-es.pdf` y `-en.pdf`.
 - **Tarjetas de Open Graph** por idioma: `assets/og/`.
 - **Una crítica de diseño previa**: `.impeccable/critique/2026-09-04T14-02-51Z__sites-d-ficha.md`.
@@ -76,7 +77,7 @@ Ausencias que no se deben fabricar:
 - Nombres de clientes: los trabajos hechos a través de Pabex aparecen anonimizados ("SaaS B2B", "plataforma de salud digital"). *Inferido del contenido, sin confirmar.*
 - Título universitario: la Licenciatura en Ciencias de la Computación figura con la cursada completa hasta cuarto año, no como terminada.
 - La URL de la credencial de Mercado Pago.
-- Links a GitHub de NEONDUEL y Surf: los repos son privados.
+- Links a GitHub de NEONDUEL, Surf, el museo, el bot y la infra: los repos son privados.
 
 ## Product Principles
 

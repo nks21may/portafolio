@@ -9,9 +9,11 @@
  */
 
 import { createServer } from 'node:http';
+import { randomBytes } from 'node:crypto';
 import { readFile, stat } from 'node:fs/promises';
 import { join, extname, normalize, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { NONCE_PLACEHOLDER } from './lib/head.mjs';
 
 const ROOT = dirname(fileURLToPath(import.meta.url));
 
@@ -48,7 +50,12 @@ function serve(port) {
       const info = await stat(file).catch(() => null);
       if (info?.isDirectory()) file = join(file, 'index.html');
 
-      const body = await readFile(file);
+      let body = await readFile(file);
+      /* Lo mismo que hace el sub_filter de nginx: el marcador del nonce del
+         <meta> se reemplaza por uno nuevo en cada request. */
+      if (extname(file) === '.html') {
+        body = body.toString('utf8').replace(NONCE_PLACEHOLDER, randomBytes(16).toString('hex'));
+      }
       res.writeHead(200, {
         'Content-Type': TYPES[extname(file)] || 'application/octet-stream',
         'Cache-Control': 'no-store',

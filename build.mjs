@@ -184,7 +184,11 @@ async function buildSite() {
         scriptHashes: [jsHash, ...new Set(ldHashes)],
         scriptSources: cspSources.script,
         connectSources: cspSources.connect,
+        /* $request_id: 16 bytes al azar por request, que nginx expande en el
+           header y que el sub_filter pone también en el <meta>. */
+        nonce: cspSources.nonce ? '$request_id' : null,
       }),
+      nonce: cspSources.nonce,
     }),
     'utf8',
   );

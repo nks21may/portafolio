@@ -27,10 +27,16 @@ export const pending = {
  *   "[email protected]" y el enlace no funciona.
  * - `browserInsights` (Speed → Browser Insights) inyecta el beacon de RUM,
  *   que además manda las mediciones a cloudflareinsights.com.
+ * - `jsDetections` (Security → Bots → JavaScript Detections) inyecta un
+ *   script inline que lleva el ray id de cada request adentro, así que no hay
+ *   hash que lo cubra. Con Bot Fight Mode, que es lo que trae el plan gratis,
+ *   no se puede apagar. Lo que Cloudflare sí hace es copiarle el nonce de la
+ *   CSP del header, y por eso esta bandera suma un nonce por request.
  */
 export const cloudflare = {
   emailObfuscation: true,
   browserInsights: true,
+  jsDetections: true,
 };
 
 export const site = {
@@ -80,23 +86,56 @@ export const projects = [
     stack: ['Go', 'net/http', 'SQLite', 'modernc.org/sqlite', 'Docker'],
   },
   {
+    id: 'oracle-infra',
+    featured: false,
+    period: { start: '2023-01', end: null },
+    // Sin `url` ni `repo`: el repo es privado a propósito, porque describe la
+    // superficie expuesta del servidor entero.
+    stack: [
+      'Ubuntu',
+      'ARM64',
+      'Docker Compose',
+      'Cloudflare Tunnel',
+      'OpenTofu',
+      'Ansible',
+      'sops + age',
+      'Prometheus',
+      'Loki',
+      'Grafana',
+      'restic',
+      'GitHub Actions',
+    ],
+  },
+  {
     id: 'mcp-platform',
     featured: false,
     period: { start: '2023-03', end: null },
     stack: ['Python', 'Django REST Framework', 'drf-spectacular', 'MCP', 'PostgreSQL', 'Angular'],
     // Esquema simplificado de la decisión técnica del proyecto. Es ilustrativo,
     // no el código de producción: la etiqueta del bloque lo dice explícitamente.
+    // El código es el mismo en los dos idiomas; sólo cambian los comentarios.
     code: {
       lang: 'python',
-      source: [
-        'def build_tools(plan):',
-        '    schema = live_openapi_schema()   # drf-spectacular, en caliente',
-        '',
-        '    for operation in walk(schema):',
-        '        if operation.get("x-plan-required") > plan:',
-        '            continue                 # el plan recorta la superficie',
-        '        yield tool_from(operation)   # nombre, args y docs del schema',
-      ].join('\n'),
+      source: {
+        es: [
+          'def build_tools(plan):',
+          '    schema = live_openapi_schema()   # drf-spectacular, en caliente',
+          '',
+          '    for operation in walk(schema):',
+          '        if operation.get("x-plan-required") > plan:',
+          '            continue                 # el plan recorta la superficie',
+          '        yield tool_from(operation)   # nombre, args y docs del schema',
+        ].join('\n'),
+        en: [
+          'def build_tools(plan):',
+          '    schema = live_openapi_schema()   # drf-spectacular, read live',
+          '',
+          '    for operation in walk(schema):',
+          '        if operation.get("x-plan-required") > plan:',
+          '            continue                 # the plan trims the surface',
+          '        yield tool_from(operation)   # name, args and docs from the schema',
+        ].join('\n'),
+      },
     },
   },
   {
@@ -140,18 +179,30 @@ export const projects = [
     ],
   },
   {
-    id: 'oracle-infra',
-    featured: false,
-    period: { start: '2023-01', end: null },
-    stack: ['Ubuntu', 'ARM64', 'Docker Compose', 'nginx', 'Cloudflare DNS'],
-  },
-  {
     id: 'surf-bhop',
     featured: false,
     period: { start: '2026-09', end: null },
     // Igual que NEONDUEL: se juega en su subdominio, el repo es privado.
     url: 'https://surf.nicolasdalessandro.dev/',
-    stack: ['TypeScript', 'three.js', 'Fastify', 'SQLite', 'Discord OAuth2', 'Vitest', 'Docker'],
+    stack: [
+      'TypeScript',
+      'three.js',
+      'Fastify',
+      'WebSocket',
+      'SQLite',
+      'Discord OAuth2',
+      'Discord Embedded App SDK',
+      'Vitest',
+      'Docker',
+    ],
+  },
+  {
+    id: 'museo',
+    featured: false,
+    period: { start: '2026-09', end: null },
+    // Como los juegos: se visita en su subdominio, el repo es privado.
+    url: 'https://museo.nicolasdalessandro.dev/',
+    stack: ['JavaScript', 'WebGL2', 'GLSL ES 3.00', 'HTML-in-Canvas', 'Playwright', 'nginx', 'Docker'],
   },
 ];
 
@@ -165,7 +216,13 @@ export const experience = {
   ],
 };
 
-/** Grupos de habilidades. Sin porcentajes, sin barras, sin nube de logos. */
+/**
+ * Grupos de habilidades. Sin porcentajes, sin barras, sin nube de logos.
+ *
+ * Un nombre propio va como texto y sale igual en los dos idiomas. Lo que se
+ * traduce va como { es, en }: si falta un idioma, el build lo dice en vez de
+ * mostrar el ítem en el idioma equivocado.
+ */
 export const skills = [
   {
     id: 'backend',
@@ -174,10 +231,10 @@ export const skills = [
       'Django',
       'Django REST Framework',
       'Go',
-      'Diseño de APIs',
+      { es: 'Diseño de APIs', en: 'API design' },
       'OpenAPI / drf-spectacular',
-      'Optimización de ORM y consultas',
-      'Celery y tareas asincrónicas',
+      { es: 'Optimización de ORM y consultas', en: 'ORM and query optimisation' },
+      { es: 'Celery y tareas asincrónicas', en: 'Celery and background tasks' },
       'PostgreSQL',
       'MySQL',
       'SQLite',
@@ -187,34 +244,39 @@ export const skills = [
     id: 'ai',
     items: [
       'Model Context Protocol (MCP)',
-      'Diseño y despliegue de servidores MCP',
-      'Integración de agentes con APIs existentes',
-      'Claude Code en el flujo diario'
+      { es: 'Diseño y despliegue de servidores MCP', en: 'Designing and deploying MCP servers' },
+      { es: 'Integración de agentes con APIs existentes', en: 'Wiring agents into existing APIs' },
+      { es: 'Plugins de Claude Code: skills, agentes y MCPs', en: 'Claude Code plugins: skills, agents and MCPs' },
     ],
   },
   {
     id: 'infra',
     items: [
       'Linux (Ubuntu)',
-      'Docker y Docker Compose',
-      'nginx como reverse proxy',
+      { es: 'Docker y Docker Compose', en: 'Docker and Docker Compose' },
+      'nginx',
+      { es: 'Cloudflare: DNS, Tunnel y Access', en: 'Cloudflare: DNS, Tunnel and Access' },
+      'OpenTofu',
+      'Ansible',
+      { es: 'Secretos con sops y age', en: 'Secrets with sops and age' },
+      { es: 'Prometheus, Loki y Grafana', en: 'Prometheus, Loki and Grafana' },
+      { es: 'CI con GitHub Actions y GHCR', en: 'CI with GitHub Actions and GHCR' },
       'Oracle Cloud',
       'ARM64',
-      'DNS y Cloudflare',
       'WebSockets',
       'OAuth',
     ],
   },
   {
     id: 'frontend',
-    items: ['Angular', 'TypeScript', 'Arquitectura de componentes'],
+    items: ['Angular', 'TypeScript', { es: 'Arquitectura de componentes', en: 'Component architecture' }],
   },
   {
     id: 'payments',
     items: [
       'Mercado Pago (Checkout Pro)',
       'Webhooks',
-      'Idempotencia en flujos de cobro',
+      { es: 'Idempotencia en flujos de cobro', en: 'Idempotent payment flows' },
     ],
   },
   {
@@ -222,9 +284,9 @@ export const skills = [
     items: [
       'Git',
       'Bitbucket',
-      'Code review y ownership por módulo',
+      { es: 'Code review y ownership por módulo', en: 'Code review and module ownership' },
       'Kanban',
-      'Documentación técnica y ADRs',
+      { es: 'Documentación técnica y ADRs', en: 'Technical writing and ADRs' },
     ],
   },
 ];
